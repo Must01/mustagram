@@ -33,7 +33,7 @@ return [
 
         'mongodb' => [
             'driver' => 'mongodb',
-            'dns' => env('DB_URI'),
+            'dsn' => env('DB_URI'),
             'database' => env('DB_DATABASE', 'instagram-clone')
         ],
 
