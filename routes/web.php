@@ -1,15 +1,43 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\PostController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\CommentController;
+use App\Http\Controllers\LikeController;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Set homepage to show posts feed (requires authentication)
+Route::get('/', [PostController::class, 'index'])
+    ->middleware('auth')
+    ->name('home');
+
+Route::get('/home', function () {
+    return redirect('/'); // Redirect to your main feed
+})->name('home');
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+// Post routes
+Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
+Route::get('/posts/create', [PostController::class, 'create'])->name('posts.create');
+Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
+Route::get('/posts/{post}', [PostController::class, 'show'])->name('posts.show');
+Route::get('/posts/{post}/edit', [PostController::class, 'edit'])->name('posts.edit');
+Route::patch('/posts/{post}', [PostController::class, 'update'])->name('posts.update');
+Route::delete('/posts/{post}', [PostController::class, 'destroy'])->name('posts.destroy');
 
-Auth::routes();
+// Profile routes
+Route::get('/profile/{user}', [ProfileController::class, 'index'])->name('profile.show');
+Route::get('/profile/{user}/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+Route::patch('/profile/{user}', [ProfileController::class, 'update'])->name('profile.update');
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+// Comment routes
+Route::post('/posts/{post}/comments', [CommentController::class, 'store'])->name('comments.store');
+Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
+
+// Like routes
+Route::post('/posts/{post}/likes', [LikeController::class, 'likePost'])->name('likes.post');
+Route::delete('/posts/{post}/likes', [LikeController::class, 'unlikePost'])->name('unlike.post');
+Route::post('/comments/{comment}/likes', [LikeController::class, 'likeComment'])->name('likes.comment');
+Route::delete('/comments/{comment}/likes', [LikeController::class, 'unlikeComment'])->name('unlike.comment');
