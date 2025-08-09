@@ -26,16 +26,31 @@ class PostController extends Controller
 
     public function store(Request $request)
     {
+
+        // array to hold image paths
+        $images = [];
+
+        // validate the post request
         $data = $request->validate([
             'caption' => 'required',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'images' => 'required|array',
+            'images.*' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        $imagePath = $request->file('image')->store('uploads', 'public');
+        // loop through each file and store them + add to images array
+        foreach (request()->file('images') as $file) {
+            $imagePath = $file->store('uploads', 'public');
+            # Check if the image was uploaded successfully (made with ai not really understand it)
+            if (!$imagePath) {
+                return back()->withErrors(['image' => 'Failed to upload image.']);
+            }
+            $images[] = $imagePath;
+        }
 
+        // create the post with the current authenticated user
         auth()->user()->posts()->create([
             'caption' => $data['caption'],
-            'image_path' => $imagePath,
+            'image_path' => $images
         ]);
 
         return redirect('/profile/' . auth()->user()->id);
@@ -58,15 +73,40 @@ class PostController extends Controller
 
     public function update(Request $request, Post $post)
     {
+
+        // validate the request
+        $data = $request->validate([
+            'caption' => 'required',
+            'images' => 'nullable|array',
+            'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        $updatedImages = [];
+
+        // get old images and decode them
+        $oldImages = json_decode($post->image_path ?? '[]', true);
+
+        // loop over each file and check if they exist ? save in new array : store them
+        foreach($request->file('images') as $file) {
+            if (in_array($file, $oldImages)) {
+                $updatedImages[] = $file;
+            } else {
+                $updatedImages[] = $file->store('uploads', 'public');
+            }
+        }
+
         // Check if the authenticated user is the same as the post user
         if (auth()->id() !== $post->user_id) {
             abort(403, 'Unauthorized action.');
         }
         
+        // store teh data 
         $data = $request->validate([
-            'caption' => 'required',
+            'caption' => request('caption'),
+            'image_path' => $updatedImages ? $updatedImages : $oldImages, //key old if there is no new images
         ]);
 
+        // update the post
         $post->update($data);
 
         return redirect('/posts/' . $post->id);

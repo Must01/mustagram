@@ -16,15 +16,15 @@ class Comment extends Model
         'post_id',
     ];
 
-    protected function post() {
+    public function post() {
         return $this->belongsTo(Post::class);
     }
 
-    protected function user() {
+    public function user() {
         return $this->belongsTo(User::class);
     }
 
-    protected function likes() {
+    public function likes() {
         return $this->hasMany(Like::class);
     }
 }

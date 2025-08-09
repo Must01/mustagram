@@ -9,6 +9,11 @@ class Post extends Model
 {
     protected $connection = 'mongodb';
     protected $table = 'posts'; // collection
+ 
+    protected $casts = [
+        'image_path' => 'array',
+    ];
+
 
     protected $fillable = [
         'caption', 
@@ -17,15 +22,15 @@ class Post extends Model
         'user_id'
     ];
 
-    protected function user() {
-        return $this->bleongsTo(User::class);
+    public function user() {
+        return $this->belongsTo(User::class);
     }
 
-    protected function comments() {
+    public function comments() {
         return $this->hasMany(Comment::class);
     }
 
-    protected function likes() {
+    public function likes() {
         return $this->hasMany(Like::class);
     }
 }

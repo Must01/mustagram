@@ -1,80 +1,84 @@
 <!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <!-- CSRF Token -->
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-
-    <title>{{ config('app.name', 'Laravel') }}</title>
-
-    <!-- Fonts -->
-    <link rel="dns-prefetch" href="//fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
-
-    <!-- Scripts -->
-    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+  <meta charset="utf-8" />
+  <link rel="icon" href="{{ asset('favicon.png') }}" type="image/x-icon">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="csrf-token" content="{{ csrf_token() }}" />
+  <title>{{ config('app.name', 'MustaGram') }}</title>
+  @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body>
-    <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
-            <div class="container">
-                <a class="navbar-brand" href="{{ url('/') }}">
-                    {{ config('app.name', 'Laravel') }}
+<body class="bg-gray-50 text-gray-800">
+  <div id="app" class="min-h-screen flex flex-col">
+    <!-- Navbar -->
+    <nav class="bg-white shadow border-b border-gray-200">
+      <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+        <a href="{{ url('/') }}" class="text-2xl font-semibold text-indigo-600 font-sans">mustagram</a>
+
+        <!-- Hamburger Button for Mobile -->
+        <button id="mobile-menu-button" class="md:hidden focus:outline-none" aria-label="Toggle menu">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+
+        <!-- Menu -->
+        <div id="mobile-menu" class="hidden md:flex md:items-center md:space-x-6">
+          <ul class="flex flex-col md:flex-row md:space-x-6">
+            @auth
+              <li><a href="{{ route('posts.index') }}" class="block py-2 hover:text-indigo-600">Feed</a></li>
+            @endauth
+          </ul>
+
+          <ul class="flex flex-col md:flex-row md:space-x-4 items-center mt-3 md:mt-0">
+            @guest
+              @if (Route::has('login'))
+                <li><a href="{{ route('login') }}" class="block py-2 hover:text-indigo-600">Login</a></li>
+              @endif
+              @if (Route::has('register'))
+                <li><a href="{{ route('register') }}" class="block py-2 hover:text-indigo-600">Register</a></li>
+              @endif
+            @else
+              <li>
+                <a href="{{ route('posts.create') }}" class="flex items-center py-2 hover:text-indigo-600">
+                  <svg class="w-5 h-5 mr-1" fill="currentColor" viewBox="0 0 20 20"><path d="M10 5v10m5-5H5"/></svg>
+                  New Post
                 </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
-                    <span class="navbar-toggler-icon"></span>
+              </li>
+
+              <!-- Dropdown -->
+              <li class="relative">
+                <button id="dropdown-button" class="py-2 flex items-center focus:outline-none">
+                  {{ Auth::user()->username }}
+                  <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M19 9l-7 7-7-7" />
+                  </svg>
                 </button>
 
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <!-- Left Side Of Navbar -->
-                    <ul class="navbar-nav me-auto">
-
-                    </ul>
-
-                    <!-- Right Side Of Navbar -->
-                    <ul class="navbar-nav ms-auto">
-                        <!-- Authentication Links -->
-                        @guest
-                            @if (Route::has('login'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
-                                </li>
-                            @endif
-
-                            @if (Route::has('register'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
-                                </li>
-                            @endif
-                        @else
-                            <li class="nav-item dropdown">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    {{ Auth::user()->name }}
-                                </a>
-
-                                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ route('logout') }}"
-                                       onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
-                                    </a>
-
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                        @csrf
-                                    </form>
-                                </div>
-                            </li>
-                        @endguest
-                    </ul>
+                <div id="dropdown-menu" class="hidden absolute right-0 mt-2 w-40 bg-white border rounded shadow-md z-20">
+                  <a href="{{ route('profile.show', Auth::user()->id) }}" class="block px-4 py-2 hover:bg-indigo-50">Profile</a>
+                  <a href="{{ route('logout') }}" 
+                     onclick="event.preventDefault(); document.getElementById('logout-form').submit();" 
+                     class="block px-4 py-2 hover:bg-indigo-50">
+                    Logout
+                  </a>
                 </div>
-            </div>
-        </nav>
+              </li>
+            @endguest
+          </ul>
+        </div>
+      </div>
+    </nav>
 
-        <main class="py-4">
-            @yield('content')
-        </main>
-    </div>
+    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">@csrf</form>
+
+    <!-- Main Content -->
+    <main class="flex-grow py-8 max-w-5xl mx-auto px-4 w-full">
+      @yield('content')
+    </main>
+  </div>
+
 </body>
 </html>

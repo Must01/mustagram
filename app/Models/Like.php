@@ -15,15 +15,15 @@ class Like extends Model
         'comment_id'
     ];
 
-    protected function post() {
+    public function post() {
         return $this->belongsTo(Post::class);
     }
 
-    protected function comment() {
+    public function comment() {
         return $this->belongsTo(Comment::class);
     }
 
-    protected function user() {
+    public function user() {
         return $this->belongsTo(User::class);
     }
 }

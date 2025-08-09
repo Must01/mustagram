@@ -34,17 +34,17 @@ class ProfileController extends Controller
             'name' => 'required',
             'username' => 'required',
             'bio' => 'nullable',
-            'profile_image' => 'image|nullable|mimes:jpeg,png,jpg,gif|max:2048',
+            'profile_img' => 'image|nullable|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        if ($request->hasFile('profile_image')) {
+        if ($request->file('image')) {
             // Delete old profile image if exists
             if ($user->profile_image) {
                 Storage::disk('public')->delete($user->profile_image);
             }
             
-            $imagePath = $request->file('profile_image')->store('profile', 'public');
-            $data['profile_image'] = $imagePath;
+            $imagePath = $request->file('image')->store('profile', 'public');
+            $data['profile_img'] = $imagePath;
         }
 
         $user->update($data);

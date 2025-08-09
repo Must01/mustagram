@@ -43,17 +43,17 @@ class User extends Authenticatable
         ];
     }
 
-    protected function posts()
+    public function posts()
     {
         return $this->hasMany(Post::class);
     }
 
-    protected function likes()
+    public function likes()
     {
         return $this->hasMany(Like::class); 
     }
 
-    protected function comments()
+    public function comments()
     {
         return $this->hasMany(Comment::class);
     }
