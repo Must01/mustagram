@@ -1,34 +1,100 @@
 import "./bootstrap";
 // mobile menu toggle
-const btn = document.getElementById("mobile-menu-button");
-const menu = document.getElementById("mobile-menu");
+document.addEventListener("DOMContentLoaded", function () {
+    // ===== Mobile Hamburger Menu =====
+    const mobileBtn = document.getElementById("mobile-menu-button");
+    const mobileMenu = document.getElementById("mobile-menu");
+    const menuIcon = document.getElementById("menu-icon");
+    const closeIcon = document.getElementById("close-icon");
 
-btn.addEventListener("click", () => {
-    menu.classList.toggle("hidden");
-});
+    if (mobileBtn && mobileMenu) {
+        mobileBtn.addEventListener("click", () => {
+            const isHidden = mobileMenu.classList.toggle("hidden");
 
-// Dropdown toggle
-const dropdownBtn = document.getElementById("dropdown-button");
-const dropdownMenu = document.getElementById("dropdown-menu");
-
-dropdownBtn.addEventListener("click", () => {
-    dropdownMenu.classList.toggle("hidden");
-});
-
-// Close dropdown if clicked outside
-document.addEventListener("click", (e) => {
-    if (!dropdownBtn.contains(e.target) && !dropdownMenu.contains(e.target)) {
-        dropdownMenu.classList.add("hidden");
+            // Toggle icons with smooth transition
+            if (isHidden) {
+                menuIcon.classList.remove("hidden");
+                closeIcon.classList.add("hidden");
+            } else {
+                menuIcon.classList.add("hidden");
+                closeIcon.classList.remove("hidden");
+            }
+        });
     }
+
+    // ===== Desktop Dropdown Menu =====
+    const dropdownBtn = document.getElementById("desktop-dropdown-button");
+    const dropdownMenu = document.getElementById("desktop-dropdown-menu");
+
+    if (dropdownBtn && dropdownMenu) {
+        dropdownBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            dropdownMenu.classList.toggle("hidden");
+
+            // Rotate arrow with smooth transition
+            const arrow = dropdownBtn.querySelector("svg");
+            if (arrow) {
+                arrow.style.transform = dropdownMenu.classList.contains(
+                    "hidden"
+                )
+                    ? "rotate(0deg)"
+                    : "rotate(180deg)";
+            }
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener("click", (e) => {
+            if (
+                !dropdownBtn.contains(e.target) &&
+                !dropdownMenu.contains(e.target)
+            ) {
+                dropdownMenu.classList.add("hidden");
+                const arrow = dropdownBtn.querySelector("svg");
+                if (arrow) {
+                    arrow.style.transform = "rotate(0deg)";
+                }
+            }
+        });
+    }
+
+    // ===== Close mobile menu when clicking outside =====
+    document.addEventListener("click", (e) => {
+        if (
+            mobileBtn &&
+            mobileMenu &&
+            !mobileBtn.contains(e.target) &&
+            !mobileMenu.contains(e.target)
+        ) {
+            mobileMenu.classList.add("hidden");
+            if (menuIcon && closeIcon) {
+                menuIcon.classList.remove("hidden");
+                closeIcon.classList.add("hidden");
+            }
+        }
+    });
+
+    // ===== Close mobile menu when window is resized to desktop =====
+    window.addEventListener("resize", () => {
+        if (window.innerWidth >= 768 && mobileMenu) {
+            // md breakpoint
+            mobileMenu.classList.add("hidden");
+            if (menuIcon && closeIcon) {
+                menuIcon.classList.remove("hidden");
+                closeIcon.classList.add("hidden");
+            }
+        }
+    });
 });
 
 // image upload logic
-document.querySelectorAll('input[type="file"]').forEach((input) => {
-    const previewArea = document.getElementById("preview-area");
-
-    setImageUploader(input, previewArea);
+document.addEventListener("DOMContentLoaded", () => {
+    document.querySelectorAll('input[type="file"]').forEach((input) => {
+        const previewArea = document.getElementById("preview-area");
+        setImageUploader(input, previewArea);
+        const OldImages = document.querySelector('input[name="oldImages"]');
+        console.log(OldImages);
+    });
 });
-
 // image upload function (single/multiple images)
 function setImageUploader(input, previewArea) {
     const dt = new DataTransfer();
@@ -132,34 +198,38 @@ function setImageUploader(input, previewArea) {
 }
 
 // image carousel
-const images = document.querySelectorAll(".carousel-item");
-let currentIndex = 0;
-const prevBtn = document.getElementById("prev-btn");
-const nextBtn = document.getElementById("next-btn");
+// loop over each carousel separately, because each one has its own images and buttons.
+document.querySelectorAll("[id^='carousel-']").forEach((carousel) => {
+    let currentIndex = 0; // use let cause we will update it.
+    const images = carousel.querySelectorAll(".carousel-item");
+    const prevBtn = carousel.querySelector(".prev-btn");
+    const nextBtn = carousel.querySelector(".next-btn");
 
-// if there is only one image hide the buttons:
-if (images.length <= 1) {
-    prevBtn.style.display = "none";
-    nextBtn.style.display = "none";
-}
+    // Hide buttons if it's only one image
+    if (images.length <= 1) {
+        prevBtn.style.display = "none";
+        nextBtn.style.display = "none";
+    }
 
-images.forEach((image, i) => {
-    image.classList.toggle("hidden", currentIndex !== i);
-});
+    // hide all images except the first one
+    images.forEach((img, i) => img.classList.toggle("hidden", i !== 0));
 
-nextBtn.addEventListener("click", () => {
-    images[currentIndex].classList.toggle("hidden", true);
-    currentIndex = (currentIndex + 1) % images.length;
-    images[currentIndex].classList.toggle("hidden", false);
-});
-prevBtn.addEventListener("click", () => {
-    images[currentIndex].classList.toggle("hidden");
-    currentIndex = (currentIndex - 1 + images.length) % images.length;
-    images[currentIndex].classList.toggle("hidden");
-});
+    // on button click we move to next image s
+    nextBtn.addEventListener("click", () => {
+        images[currentIndex].classList.add("hidden"); // hide current
+        currentIndex = (currentIndex + 1) % images.length; // go to next, loop back if at end
+        images[currentIndex].classList.remove("hidden"); // show next
+    });
 
-// let the user use the keyboard navigations:
-document.addEventListener("keydown", (e) => {
-    if (e.key === "ArrowRight") nextBtn.click();
-    if (e.key === "ArrowLeft") prevBtn.click();
+    prevBtn.addEventListener("click", () => {
+        images[currentIndex].classList.add("hidden");
+        currentIndex = (currentIndex - 1 + images.length) % images.length;
+        images[currentIndex].classList.remove("hidden");
+    });
+
+    // nav using arrow keys :
+    document.addEventListener("keydown", (e) => {
+        if (e.key === "ArrowRight") nextBtn.click();
+        if (e.key === "ArrowLeft") prevBtn.click();
+    });
 });

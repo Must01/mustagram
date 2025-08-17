@@ -15,7 +15,7 @@ class PostController extends Controller
 
     public function index()
     {
-        $posts = Post::with('user')->latest()->get();
+        $posts = Post::with('user','comments','likes')->latest()->get();
         return view('posts.index', compact('posts'));
     }
 
@@ -35,6 +35,7 @@ class PostController extends Controller
             'caption' => 'required',
             'images' => 'required|array',
             'images.*' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            
         ]);
 
         // loop through each file and store them + add to images array
@@ -73,43 +74,52 @@ class PostController extends Controller
 
     public function update(Request $request, Post $post)
     {
+        $newImages =[];
 
-        // validate the request
-        $data = $request->validate([
-            'caption' => 'required',
-            'images' => 'nullable|array',
-            'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
-
-        $updatedImages = [];
-
-        // get old images and decode them
-        $oldImages = json_decode($post->image_path ?? '[]', true);
-
-        // loop over each file and check if they exist ? save in new array : store them
-        foreach($request->file('images') as $file) {
-            if (in_array($file, $oldImages)) {
-                $updatedImages[] = $file;
-            } else {
-                $updatedImages[] = $file->store('uploads', 'public');
-            }
-        }
-
-        // Check if the authenticated user is the same as the post user
+        // 1 - Authentification
         if (auth()->id() !== $post->user_id) {
             abort(403, 'Unauthorized action.');
         }
-        
-        // store teh data 
+
+        // 2 - Validate the request
         $data = $request->validate([
-            'caption' => request('caption'),
-            'image_path' => $updatedImages ? $updatedImages : $oldImages, //key old if there is no new images
+            'caption' => 'required',
+            'images' => 'nullable|array',
+            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'oldImages' => 'nullable|array',
+            'oldImages.*' => 'string'
         ]);
 
-        // update the post
+        // 3 - we delete images aren't on oldImages and add the other to the newImages,
+        foreach($post->image_path as $dbimage) {
+            if (in_array($dbimage, $request->input('oldImages', $post->image_path))) {
+                $newImages[] = $dbimage;
+            } else {
+                Storage::disk('public')->delete($dbimage);
+            }
+        }
+
+        // 4 - check for new images then we save them into storage
+        if ($request->hasFile('images')) {
+            foreach($request->file('images') as $file) {
+            $newImages[] = $file->store('uploads', 'public');
+        }
+        }
+
+        // 5 - make sure there is no dublication 
+        $newImages = array_values(array_unique($newImages));
+        
+        // 6 - store the data 
+        $data = [
+            'caption' => request('caption'),
+            'image_path' => $newImages
+        ];
+
+        // 7 - update the post
         $post->update($data);
 
-        return redirect('/posts/' . $post->id);
+        // 8 - redirect
+        return redirect()->route('posts.show',$post->id)->with('success', 'Post updated successfully.');
     }
 
     public function destroy(Post $post)
@@ -120,11 +130,13 @@ class PostController extends Controller
         }
         
         // Delete the image file
-        Storage::disk('public')->delete($post->image_path);
+        foreach ($post->image_path as $image) {
+            Storage::disk('public')->delete($image);
+        } 
         
         // Delete the post
         $post->delete();
 
-        return redirect('/profile/' . auth()->user()->id);
+        return redirect()->route('profile.show', auth()->user()->id)->with('success', 'Post deleted successfuly');
     }
 }
