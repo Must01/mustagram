@@ -40,11 +40,11 @@ class ProfileController extends Controller
         if ($request->file('image')) {
             // Delete old profile image if exists
             if ($user->profile_image) {
-                Storage::disk('public')->delete($user->profile_image);
+                Storage::disk('cloudinary')->delete($user->profile_image);
             }
             
-            $imagePath = $request->file('image')->store('profile', 'public');
-            $data['image'] = $imagePath;
+            $imagePath = Storage::disk('cloudinary')->putFile('public', $request->file('image'));
+            $data['profile_img'] = $imagePath;
         }
 
         $user->update($data);

@@ -6,6 +6,7 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\LikeController;
+use App\Http\Controllers\ImageController;
 
 // Set homepage to show posts feed (requires authentication)
 Route::get('/', [PostController::class, 'index'])
@@ -44,3 +45,9 @@ Route::delete('/comments/{comment}/likes', [LikeController::class, 'unlikeCommen
 
 // about how made this,
 Route::view('/about', 'about')->name('about');
+
+
+// handle upload images
+
+Route::post('/upload-image', [ImageController::class, 'upload'])->name('image.upload');
+Route::get('/image/{id}', [ImageController::class, 'show'])->name('image.show');

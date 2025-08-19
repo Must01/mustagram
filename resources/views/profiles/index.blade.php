@@ -5,8 +5,7 @@
         <div class="mb-12 flex flex-col items-center gap-8 md:flex-row md:items-start">
             <!-- Profile Image -->
             <div class="flex-shrink-0">
-                <img src="{{ $user->profile_img ? asset('storage/' . $user->profile_img) : 'https://via.placeholder.com/150' }}"
-                    class="h-32 w-32 rounded-full border-4 border-gray-200 object-cover shadow-lg md:h-40 md:w-40">
+                <x-profile-img :isSmall="false" />
             </div>
 
             <!-- Profile Info -->
@@ -80,7 +79,7 @@
                     @foreach ($user->posts as $post)
                         <a href="{{ route('posts.show', $post->id) }}" class="block h-full w-full">
                             <div class="group relative aspect-square cursor-pointer">
-                                <img src="{{ asset('storage/' . $post->image_path[0]) }}"
+                                <img src=" {{ Storage::disk('cloudinary')->url($post->image_path[0]) }} "
                                     class="h-full w-full rounded-lg object-cover shadow-sm transition-shadow duration-200 group-hover:shadow-md"
                                     alt="Post image">
                                 <div

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
+
 
 class PostController extends Controller
 {
@@ -25,35 +27,35 @@ class PostController extends Controller
     }
 
     public function store(Request $request)
-    {
-        // array to hold image paths
-        $images = [];
+{
+    // ✅ Step 1: Validate
+    $data = $request->validate([
+        'caption' => 'required|string|max:255',
+        'images' => 'required|array',
+        'images.*' => 'required|file|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+    ]);
 
-        // validate the post request
-        $data = $request->validate([
-            'caption' => 'required|string|max:255',
-            'images' => 'required|array',
-            'images.*' => 'required|file|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
-        ]);
+    // ✅ Step 2: Collect uploaded images
+    $images = [];
 
-        // loop through each file and store them + add to images array
-        foreach (request()->file('images') as $file) {
-            $imagePath = $file->store('uploads', 'public');
-            # Check if the image was uploaded successfully
-            if (!$imagePath) {
-                return back()->withErrors(['image' => 'Failed to upload image.']);
-            }
-            $images[] = $imagePath;
-        }
+    foreach ($request->file('images') as $file) {
+        // Upload to Cloudinary
+        $url = Storage::disk('cloudinary')->putFile('posts', $file);
 
-        // create the post with the current authenticated user
-        auth()->user()->posts()->create([
-            'caption' => $data['caption'],
-            'image_path' => $images
-        ]);
-
-        return redirect()->route('profile.show', auth()->user()->id )->with('success', 'Post created successfuly');
+        $images[] = $url->getSecurePath();
     }
+
+    // ✅ Step 3: Save Post in DB
+    auth()->user()->posts()->create([
+        'caption' => $data['caption'],
+        'image_path' => $images
+    ]);
+
+    return redirect()
+        ->route('profile.show', auth()->user()->id)
+        ->with('success', 'Post created successfully');
+}
+
 
     public function show(Post $post)
     {

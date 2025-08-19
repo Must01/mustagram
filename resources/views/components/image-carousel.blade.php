@@ -1,7 +1,6 @@
 @props(['post', 'width' => 'md:w-3/5'])
 
 @php
-    // we create a specific id to each carousel to get it with js
     $carouselId = 'carousel-' . $post->id;
 @endphp
 
@@ -11,7 +10,7 @@
         @foreach ($post->image_path as $index => $image)
             <div class="carousel-item group absolute inset-0 transition-transform duration-500 ease-in-out"
                 data-index="{{ $index }}">
-                <img src="{{ asset('storage/' . $image) }}" class="h-full w-full rounded-lg object-cover"
+                <img src="{{ Storage::disk('cloudinary')->url($image) }}" class="h-full w-full rounded-lg object-cover"
                     alt="Post image {{ $index }}">
             </div>
         @endforeach

@@ -37,8 +37,7 @@
                     <div class="flex items-center justify-between border-b border-gray-200 p-4">
                         <div class="flex items-center">
                             @if ($post->user)
-                                <img src="{{ $post->user->profile_img ? asset('storage/' . $post->user->profile_img) : 'https://via.placeholder.com/40' }}"
-                                    class="h-8 w-8 rounded-full object-cover">
+                                <x-profile-img :isSmall="true" />
                                 <a href="{{ route('profile.show', $post->user->id) }}"
                                     class="ml-3 font-semibold text-gray-900 hover:text-gray-700">
                                     {{ $post->user->username }}
@@ -80,14 +79,13 @@
                         @endif
                     </div>
 
-                    <!-- Comments Section -->
+                    <!-- Caption Section -->
                     <div class="h-fit min-h-20 flex-1 overflow-y-auto p-4">
                         <!-- Caption -->
                         @if ($post->user)
                             <div class="flex items-center">
-                                <img src="{{ asset('storage/' . $post->user->profile_img) }}"
-                                    class="h-5.5 w-5.5 mr-2 rounded-full object-cover" />
-                                <span class="mr-2 font-semibold text-gray-900">{{ $post->user->username }}</span>
+                                <x-profile-img :post="$post" :isSmall="true" />
+                                <span class="ml-2 mr-2 font-semibold text-gray-900">{{ $post->user->username }}</span>
                                 <span class="text-gray-900">{{ $post->caption }}</span>
                             </div>
                         @else
@@ -102,11 +100,16 @@
                                 {{-- comment user / content --}}
                                 <div class="flex">
                                     @if ($comment->user)
-                                        <img src="{{ asset('storage/' . $comment->user->profile_img) }}"
-                                            class="h-5.5 w-5.5 mr-2 rounded-full object-cover" />
+                                        @if (auth()->user()->profile_img)
+                                            <img src="{{ Storage::disk('cloudinary')->url($comment->user->profile_img) }}"
+                                                class="h-5.5 w-5.5 border-1 rounded-full border-gray-200 object-cover shadow-lg">
+                                        @else
+                                            <span
+                                                class="h-5.5 w-5.5 flex cursor-pointer items-center justify-center rounded-full bg-gray-500 text-6xl font-bold text-gray-900">{{ strtoupper(substr(auth()->user()->name, 0, 1)) }}</span>
+                                        @endif
                                         <p class="text-[13px] text-gray-900">
                                             <span
-                                                class="mr-0.5 text-xs font-semibold text-gray-900">{{ $comment->user->name }}</span>
+                                                class="ml-0.5 mr-0.5 text-xs font-semibold text-gray-900">{{ $comment->user->name }}</span>
                                             {{ $comment->comment }}
                                         </p>
                                     @else
@@ -163,6 +166,7 @@
                             </div>
                         @endforeach
                     </div>
+
                     <!-- Actions Section -->
                     <div class="border-t border-gray-200">
                         <!-- Like/Comment Actions -->
@@ -199,7 +203,7 @@
 
                         <!-- Date -->
                         <div class="px-4 pb-4">
-                            <span class="text-xs uppercase text-gray-500">{{ $post->created_at->format('F d, Y') }}</span>
+                            <span class="text-xs uppercase text-gray-500">{{ $post->created_at->diffForHumans() }}</span>
                         </div>
 
                         <!-- Add Comment -->

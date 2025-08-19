@@ -12,8 +12,7 @@
                 <div class="flex items-center justify-between p-4">
                     <div class="flex items-center">
                         @if ($post->user)
-                            <img src="{{ $post->user->profile_img ? asset('storage/' . $post->user->profile_img) : 'https://via.placeholder.com/40' }}"
-                                class="h-8 w-8 rounded-full object-cover">
+                            <x-profile-img :isSmall="true" />
                             <a href="{{ route('profile.show', $post->user->id) }}"
                                 class="ml-3 font-semibold text-gray-900 hover:text-gray-700">
                                 {{ $post->user->username }}

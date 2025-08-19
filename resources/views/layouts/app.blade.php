@@ -62,9 +62,14 @@
                                     <!-- Avatar button toggles the user menu -->
                                     <button id="user-menu-button" aria-haspopup="true" aria-expanded="false"
                                         class="flex items-center gap-2 rounded-md px-2 py-1 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                                        <img src="{{ auth()->user()->profile_img ? asset('storage/' . auth()->user()->profile_img) : 'https://via.placeholder.com/32' }}"
-                                            alt="{{ auth()->user()->username }}"
-                                            class="h-8 w-8 rounded-full object-cover shadow-sm">
+                                        @if (auth()->user()->profile_img)
+                                            <img src="{{ Storage::disk('cloudinary')->url(auth()->user()->profile_img) }}"
+                                                alt="{{ auth()->user()->username }}"
+                                                class="h-8 w-8 rounded-full object-cover shadow-sm">
+                                        @else
+                                            <span
+                                                class="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-indigo-500 font-bold text-white">{{ strtoupper(substr(auth()->user()->name, 0, 1)) }}</span>
+                                        @endif
                                     </button>
 
                                     <!-- User menu: New Post / Profile / Logout -->
@@ -74,7 +79,7 @@
                                         <a href="{{ route('posts.create') }}"
                                             class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-600"
                                             role="menuitem">New Post</a>
-                                        <a href="{{ route('profile.show', Auth::user()->id) }}"
+                                        <a href="{{ route('profile.show', auth()->user()->id) }}"
                                             class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-600"
                                             role="menuitem">Profile</a>
 
@@ -124,7 +129,7 @@
                                 <a href="{{ route('posts.create') }}"
                                     class="block rounded-lg px-3 py-2 text-gray-600 transition-colors duration-200 hover:bg-white hover:text-indigo-600">New
                                     Post</a>
-                                <a href="{{ route('profile.show', Auth::user()->id) }}"
+                                <a href="{{ route('profile.show', auth()->user()->id) }}"
                                     class="block rounded-lg px-3 py-2 text-gray-600 transition-colors duration-200 hover:bg-white hover:text-indigo-600">Profile</a>
                                 <form method="POST" action="{{ route('logout') }}">
                                     @csrf
