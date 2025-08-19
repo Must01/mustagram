@@ -125,7 +125,8 @@ return [
 
     'aliases' => [
         'Cloudinary' => CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary::class,
-        'Storage'    => Illuminate\Support\Facades\Storage::class
+        'Storage'    => Illuminate\Support\Facades\Storage::class,
+        'Route'      => Illuminate\Support\Facades\Route::class,
     ],
 
 ];

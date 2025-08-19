@@ -46,8 +46,3 @@ Route::delete('/comments/{comment}/likes', [LikeController::class, 'unlikeCommen
 // about how made this,
 Route::view('/about', 'about')->name('about');
 
-
-// handle upload images
-
-Route::post('/upload-image', [ImageController::class, 'upload'])->name('image.upload');
-Route::get('/image/{id}', [ImageController::class, 'show'])->name('image.show');
