@@ -230,21 +230,27 @@
             if (el) el.remove();
         }
 
-        document.addEventListener('DOMContentLoaded', function() {
-            const optionsToggle = document.querySelector('.post-options-toggle');
-            const optionsMenu = document.querySelector('.post-options-menu');
+        <
+        script >
+            document.addEventListener('DOMContentLoaded', function() {
+                const toggles = document.querySelectorAll('.post-options-toggle');
 
-            if (optionsToggle && optionsMenu) {
-                optionsToggle.addEventListener('click', function() {
-                    optionsMenu.classList.toggle('hidden');
-                });
+                toggles.forEach(toggle => {
+                    const menu = toggle.nextElementSibling; // the .post-options-menu after the button
 
-                document.addEventListener('click', function(event) {
-                    if (!optionsToggle.contains(event.target) && !optionsMenu.contains(event.target)) {
-                        optionsMenu.classList.add('hidden');
-                    }
+                    toggle.addEventListener('click', function(e) {
+                        e.stopPropagation(); // prevent immediate closing by document click
+                        menu.classList.toggle('hidden');
+                    });
+
+                    // Close menu when clicking outside
+                    document.addEventListener('click', function(event) {
+                        if (!toggle.contains(event.target) && !menu.contains(event.target)) {
+                            menu.classList.add('hidden');
+                        }
+                    });
                 });
-            }
-        });
+            }); <
+        />
     </script>
 @endsection
