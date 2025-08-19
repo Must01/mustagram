@@ -12,7 +12,7 @@
                 <div class="flex items-center justify-between p-4">
                     <div class="flex items-center">
                         @if ($post->user)
-                            <x-profile-img :isSmall="true" />
+                            <x-profile-img :user="$post->user" :isSmall="true" />
                             <a href="{{ route('profile.show', $post->user->id) }}"
                                 class="ml-3 font-semibold text-gray-900 hover:text-gray-700">
                                 {{ $post->user->username }}
