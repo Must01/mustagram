@@ -18,8 +18,7 @@
 
                     <!-- Current User Info -->
                     <div class="mb-4 flex items-center">
-                        <img src="{{ auth()->user()->profile_img ? asset('storage/' . auth()->user()->profile_img) : 'https://via.placeholder.com/40' }}"
-                            class="h-8 w-8 rounded-full object-cover">
+                        <x-profile-img :user="auth()->user()" :isSmall="true" />
                         <span class="ml-3 font-semibold text-gray-900">{{ auth()->user()->username }}</span>
                     </div>
 
