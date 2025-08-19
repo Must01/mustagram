@@ -1,12 +1,12 @@
 <!-- resources/views/partials/footer.blade.php -->
-<footer class="mt-12 border-t border-gray-100 bg-gray-50/50">
+<footer class="mt-12 border-t border-gray-200 bg-gray-50/50">
     <div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         <!-- Main footer content -->
         <div class="grid grid-cols-1 gap-6 md:grid-cols-3 md:gap-8">
 
             <!-- Left: About/Credit -->
             <div class="text-center md:text-left">
-                <h3 class="mb-2 text-sm font-medium text-gray-900">mustagram</h3>
+                <h3 class="mb-2 font-[playwrite] text-sm font-medium text-gray-900">mustagram</h3>
                 <p class="text-sm leading-relaxed text-gray-600">
                     Made with ❤️ by
                     <a href="https://mustaphabouddahr.netlify.app" target="_blank" rel="noopener noreferrer"
@@ -25,15 +25,21 @@
                     <span
                         class="inline-flex items-center rounded-full bg-indigo-100 px-3 py-1 text-xs font-medium text-indigo-800">
                         Laravel
+                        <a href="https://laravel.com/">laravel</a></span>
                     </span>
                     <span
                         class="inline-flex items-center rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-800">
-                        MongoDB
+                        <a href="https://www.mongodb.com/">MongoDB</a></span>
+
+                    </span>
+                    <span
+                        class="inline-flex items-center rounded-full bg-cyan-100 px-3 py-1 text-xs font-medium text-cyan-700">
+                        <a href="https://https://tailwindcss.com/">Tailwind</a></span>
+
                     </span>
                     <span
                         class="inline-flex items-center rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-800">
-                        Tailwind
-                    </span>
+                        <a href="https://Cloudinary.com">Cloudinary</a></span>
                 </div>
             </div>
 
