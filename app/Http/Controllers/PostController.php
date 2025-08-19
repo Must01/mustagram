@@ -95,14 +95,14 @@ class PostController extends Controller
             if (in_array($dbimage, $request->input('oldImages', $post->image_path))) {
                 $newImages[] = $dbimage;
             } else {
-                Storage::disk('public')->delete($dbimage);
+                Storage::disk('cloudinary')->delete($dbimage);
             }
         }
 
         // 4 - check for new images then we save them into storage
         if ($request->hasFile('images')) {
             foreach($request->file('images') as $file) {
-            $newImages[] = $file->store('uploads', 'public');
+            $newImages[] = Storage::disk('cloudinary')->putFile('posts', $file);
         }
         }
 
@@ -131,7 +131,7 @@ class PostController extends Controller
         
         // Delete the image file
         foreach ($post->image_path as $image) {
-            Storage::disk('public')->delete($image);
+            Storage::disk('cloudinary')->delete($image);p
         } 
         
         // Delete the post
