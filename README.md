@@ -1,61 +1,115 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+Instagram Clone – Laravel & MongoDB
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A full-stack Instagram-like web application built with Laravel and MongoDB, where users can create accounts, upload multiple images, like posts, and comment. This project was inspired by the FreeCodeCamp Full-Stack Instagram Clone tutorial and built with love for learning and improving full-stack development skills.
 
-## About Laravel
+Features
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+User authentication (register, login, logout)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Create, edit, and delete posts
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Upload multiple images per post with preview support
 
-## Learning Laravel
+Like and unlike posts
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Comment on posts
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+Profile page with editable profile picture
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Responsive UI built with Tailwind CSS
 
-## Laravel Sponsors
+Carousel display for multiple images
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+Real-time error handling for forms
 
-### Premium Partners
+Tech Stack
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+Backend: Laravel 12
 
-## Contributing
+Database: MongoDB (local or Atlas)
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Frontend: Blade + Tailwind CSS
 
-## Code of Conduct
+File Storage: Laravel Public Storage
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Image Handling: Custom reusable image upload component
 
-## Security Vulnerabilities
+Installation
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Clone the repository:
 
-## License
+git clone https://github.com/Must01/instagram-clone.git
+cd instagram-clone
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Install dependencies:
+
+composer install
+npm install
+npm run dev
+
+Copy .env file and set environment variables:
+
+cp .env.example .env
+php artisan key:generate
+
+Update your .env with:
+
+# MongoDB connection (local or Atlas)
+
+DB_CONNECTION=mongodb
+DB_URI=mongodb://127.0.0.1:27017/instagram_clone # replace with your MongoDB URI if using Atlas
+
+Note: You can connect the Mustagram app database using either your local MongoDB or MongoDB Atlas by changing the DB_URI in your .env file or environment variables.
+
+Run migrations (if any) and seeders:
+
+php artisan migrate
+php artisan db:seed
+
+Run the application:
+
+php artisan serve
+
+Visit http://127.0.0.1:8000 in your browser.
+
+Usage
+
+Register a new user or login with existing credentials
+
+Go to Create Post to upload images and add a caption
+
+Like or comment on posts
+
+Edit your profile and change your profile picture
+
+Each post has a menu to edit or delete (if it’s yours)
+
+Notes / Tips
+
+The image upload component supports multiple images with previews before submission
+
+Old images are preserved when editing a post
+
+Maximum image size: 2MB
+
+Allowed formats: JPEG, PNG, JPG, GIF, SVG
+
+Contributing
+
+Feel free to open issues or submit pull requests! This project is a learning project, so all contributions to improve features or fix bugs are welcome.
+
+License
+
+This project is open-source. You can use it for learning purposes or personal projects.
+
+Screenshots / Demo
+
+(Replace with actual screenshots or GIFs of your app)
+
+Home feed
+
+Post creation with image preview
+
+Profile page
+
+Post carousel
