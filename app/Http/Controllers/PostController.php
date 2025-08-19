@@ -41,7 +41,7 @@ class PostController extends Controller
         // Upload to Cloudinary
         $url = Storage::disk('cloudinary')->putFile('posts', $file);
 
-        $images[] = $url->getSecurePath();
+        $images[] = $url;
     }
 
     // ✅ Step 3: Save Post in DB
