@@ -102,8 +102,8 @@ class PostController extends Controller
         // 4 - check for new images then we save them into storage
         if ($request->hasFile('images')) {
             foreach($request->file('images') as $file) {
-            $newImages[] = Storage::disk('cloudinary')->putFile('posts', $file);
-        }
+                $newImages[] = Storage::disk('cloudinary')->putFile('posts', $file);
+            }
         }
 
         // 5 - make sure there is no dublication 
@@ -131,7 +131,7 @@ class PostController extends Controller
         
         // Delete the image file
         foreach ($post->image_path as $image) {
-            Storage::disk('cloudinary')->delete($image);p
+            Storage::disk('cloudinary')->delete($image);
         } 
         
         // Delete the post
