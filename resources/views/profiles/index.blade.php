@@ -5,7 +5,7 @@
         <div class="mb-12 flex flex-col items-center gap-8 md:flex-row md:items-start">
             <!-- Profile Image -->
             <div class="flex-shrink-0">
-                <x-profile-img :isSmall="false" />
+                <x-profile-img :user="$user" :isSmall="false" />
             </div>
 
             <!-- Profile Info -->

@@ -1,7 +1,7 @@
-@props(['post' => null, 'isSmall'])
+@props(['user' => auth()->user(), 'isSmall'])
 
-@if (auth()->user()->profile_img)
-    <img src="{{ Storage::disk('cloudinary')->url(auth()->user()->profile_img) }}"
+@if ($user->profile_img)
+    <img src="{{ Storage::disk('cloudinary')->url($user->profile_img) }}"
         class="{{ $isSmall ? 'w-8 h-8' : 'h-32 w-32 md:h-40 md:w-40' }} rounded-full">
 @else
     <span

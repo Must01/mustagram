@@ -37,10 +37,10 @@
                     <div class="flex items-center justify-between border-b border-gray-200 p-4">
                         <div class="flex items-center">
                             @if ($post->user)
-                                <x-profile-img :isSmall="true" />
+                                <x-profile-img :user="$post->user" :isSmall="true" />
                                 <a href="{{ route('profile.show', $post->user->id) }}"
                                     class="ml-3 font-semibold text-gray-900 hover:text-gray-700">
-                                    {{ $post->user->username }}
+                                    {{ $post->user->username ? $post->user->username : $post->user->name }}
                                 </a>
                             @else
                                 <img src="https://via.placeholder.com/40" class="h-8 w-8 rounded-full object-cover">
@@ -84,7 +84,7 @@
                         <!-- Caption -->
                         @if ($post->user)
                             <div class="flex items-center">
-                                <x-profile-img :post="$post" :isSmall="true" />
+                                <x-profile-img :user="$post->user" :isSmall="true" />
                                 <span class="ml-2 mr-2 font-semibold text-gray-900">{{ $post->user->username }}</span>
                                 <span class="text-gray-900">{{ $post->caption }}</span>
                             </div>
