@@ -34,7 +34,7 @@ class ProfileController extends Controller
             'name' => 'required',
             'username' => 'required',
             'bio' => 'nullable',
-            'profile_img' => 'image|nullable|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'image|nullable|mimes:jpeg,png,jpg,gif,webp|max:2048',
         ]);
 
         if ($request->file('image')) {
@@ -44,7 +44,7 @@ class ProfileController extends Controller
             }
             
             $imagePath = $request->file('image')->store('profile', 'public');
-            $data['profile_img'] = $imagePath;
+            $data['image'] = $imagePath;
         }
 
         $user->update($data);

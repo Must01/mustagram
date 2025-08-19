@@ -1,90 +1,33 @@
 import "./bootstrap";
 // mobile menu toggle
-document.addEventListener("DOMContentLoaded", function () {
-    // ===== Mobile Hamburger Menu =====
-    const mobileBtn = document.getElementById("mobile-menu-button");
-    const mobileMenu = document.getElementById("mobile-menu");
-    const menuIcon = document.getElementById("menu-icon");
-    const closeIcon = document.getElementById("close-icon");
+// user menu toggle (module-scoped, no inline onclick)
+const userBtn = document.getElementById("user-menu-button");
+const userMenu = document.getElementById("user-menu");
+if (userBtn && userMenu) {
+    // toggle
+    userBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const isOpen = userMenu.classList.toggle("hidden") === false; // true if open
+        userBtn.setAttribute("aria-expanded", isOpen ? "true" : "false");
+    });
 
-    if (mobileBtn && mobileMenu) {
-        mobileBtn.addEventListener("click", () => {
-            const isHidden = mobileMenu.classList.toggle("hidden");
-
-            // Toggle icons with smooth transition
-            if (isHidden) {
-                menuIcon.classList.remove("hidden");
-                closeIcon.classList.add("hidden");
-            } else {
-                menuIcon.classList.add("hidden");
-                closeIcon.classList.remove("hidden");
-            }
-        });
-    }
-
-    // ===== Desktop Dropdown Menu =====
-    const dropdownBtn = document.getElementById("desktop-dropdown-button");
-    const dropdownMenu = document.getElementById("desktop-dropdown-menu");
-
-    if (dropdownBtn && dropdownMenu) {
-        dropdownBtn.addEventListener("click", (e) => {
-            e.stopPropagation();
-            dropdownMenu.classList.toggle("hidden");
-
-            // Rotate arrow with smooth transition
-            const arrow = dropdownBtn.querySelector("svg");
-            if (arrow) {
-                arrow.style.transform = dropdownMenu.classList.contains(
-                    "hidden"
-                )
-                    ? "rotate(0deg)"
-                    : "rotate(180deg)";
-            }
-        });
-
-        // Close dropdown when clicking outside
-        document.addEventListener("click", (e) => {
-            if (
-                !dropdownBtn.contains(e.target) &&
-                !dropdownMenu.contains(e.target)
-            ) {
-                dropdownMenu.classList.add("hidden");
-                const arrow = dropdownBtn.querySelector("svg");
-                if (arrow) {
-                    arrow.style.transform = "rotate(0deg)";
-                }
-            }
-        });
-    }
-
-    // ===== Close mobile menu when clicking outside =====
+    // close when clicking outside
     document.addEventListener("click", (e) => {
-        if (
-            mobileBtn &&
-            mobileMenu &&
-            !mobileBtn.contains(e.target) &&
-            !mobileMenu.contains(e.target)
-        ) {
-            mobileMenu.classList.add("hidden");
-            if (menuIcon && closeIcon) {
-                menuIcon.classList.remove("hidden");
-                closeIcon.classList.add("hidden");
-            }
+        if (!userBtn.contains(e.target) && !userMenu.contains(e.target)) {
+            userMenu.classList.add("hidden");
+            userBtn.setAttribute("aria-expanded", "false");
         }
     });
 
-    // ===== Close mobile menu when window is resized to desktop =====
-    window.addEventListener("resize", () => {
-        if (window.innerWidth >= 768 && mobileMenu) {
-            // md breakpoint
-            mobileMenu.classList.add("hidden");
-            if (menuIcon && closeIcon) {
-                menuIcon.classList.remove("hidden");
-                closeIcon.classList.add("hidden");
-            }
+    // keyboard: close on Escape, navigate
+    document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+            userMenu.classList.add("hidden");
+            userBtn.setAttribute("aria-expanded", "false");
+            userBtn.focus();
         }
     });
-});
+}
 
 // image upload logic
 document.addEventListener("DOMContentLoaded", () => {
@@ -231,5 +174,30 @@ document.querySelectorAll("[id^='carousel-']").forEach((carousel) => {
     document.addEventListener("keydown", (e) => {
         if (e.key === "ArrowRight") nextBtn.click();
         if (e.key === "ArrowLeft") prevBtn.click();
+    });
+});
+
+// each post toggle menu:
+document.addEventListener("DOMContentLoaded", () => {
+    // Get all toggle buttons
+    const toggles = document.querySelectorAll(".post-options-toggle");
+
+    toggles.forEach((toggle) => {
+        toggle.addEventListener("click", (e) => {
+            e.stopPropagation(); // Prevent click from closing immediately
+
+            // Find the menu in the same parent
+            const menu = toggle.nextElementSibling;
+            if (menu) {
+                menu.classList.toggle("hidden");
+            }
+        });
+    });
+
+    // Close menus when clicking outside
+    document.addEventListener("click", () => {
+        document.querySelectorAll(".post-options-menu").forEach((menu) => {
+            menu.classList.add("hidden");
+        });
     });
 });

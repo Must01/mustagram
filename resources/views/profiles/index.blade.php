@@ -48,6 +48,7 @@
             </div>
         </div>
 
+        {{-- success messages --}}
         @if (session('success'))
             <div id="success" class="mb-4 flex items-center border-t-4 border-green-300 bg-green-50 p-4 text-green-800"
                 role="alert">

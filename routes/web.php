@@ -41,3 +41,6 @@ Route::post('/posts/{post}/likes', [LikeController::class, 'likePost'])->name('l
 Route::delete('/posts/{post}/likes', [LikeController::class, 'unlikePost'])->name('unlike.post');
 Route::post('/comments/{comment}/likes', [LikeController::class, 'likeComment'])->name('likes.comment');
 Route::delete('/comments/{comment}/likes', [LikeController::class, 'unlikeComment'])->name('unlike.comment');
+
+// about how made this,
+Route::view('/about', 'about')->name('about');

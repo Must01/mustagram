@@ -26,22 +26,20 @@ class PostController extends Controller
 
     public function store(Request $request)
     {
-
         // array to hold image paths
         $images = [];
 
         // validate the post request
         $data = $request->validate([
-            'caption' => 'required',
+            'caption' => 'required|string|max:255',
             'images' => 'required|array',
-            'images.*' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-            
+            'images.*' => 'required|file|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
         ]);
 
         // loop through each file and store them + add to images array
         foreach (request()->file('images') as $file) {
             $imagePath = $file->store('uploads', 'public');
-            # Check if the image was uploaded successfully (made with ai not really understand it)
+            # Check if the image was uploaded successfully
             if (!$imagePath) {
                 return back()->withErrors(['image' => 'Failed to upload image.']);
             }
@@ -54,7 +52,7 @@ class PostController extends Controller
             'image_path' => $images
         ]);
 
-        return redirect('/profile/' . auth()->user()->id);
+        return redirect()->route('profile.show', auth()->user()->id )->with('success', 'Post created successfuly');
     }
 
     public function show(Post $post)

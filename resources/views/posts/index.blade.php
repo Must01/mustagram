@@ -146,8 +146,6 @@
             </div>
         @endif
     </div>
-
-    <script>
-        d
-    </script>
 @endsection
+
+<script></script>
