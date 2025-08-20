@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\followController;
 use App\Http\Controllers\LikeController;
 use App\Http\Controllers\ImageController;
 
@@ -42,6 +43,10 @@ Route::post('/posts/{post}/likes', [LikeController::class, 'likePost'])->name('l
 Route::delete('/posts/{post}/likes', [LikeController::class, 'unlikePost'])->name('unlike.post');
 Route::post('/comments/{comment}/likes', [LikeController::class, 'likeComment'])->name('likes.comment');
 Route::delete('/comments/{comment}/likes', [LikeController::class, 'unlikeComment'])->name('unlike.comment');
+
+// follow routes 
+Route::post('/follow/{user}', [followController::class , 'follow'])->name('follow');
+Route::post('/unfollow/{user}', [followController::class , 'unfollow'])->name('unfollow');
 
 // about how made this,
 Route::view('/about', 'about')->name('about');

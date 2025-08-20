@@ -20,7 +20,7 @@ class ProfileController extends Controller
             abort(403, 'Unauthorized action.');
         }
         
-        return view('profile.edit', compact('user'));
+        return view('profiles.edit', compact('user'));
     }
 
     public function update(Request $request, User $user)

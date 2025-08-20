@@ -27,13 +27,19 @@
                         <span class="font-semibold text-gray-900">{{ $user->posts->count() }}</span>
                         <span class="ml-1 text-gray-600">posts</span>
                     </div>
-                    <div class="text-center">
-                        <span class="font-semibold text-gray-900">0</span>
-                        <span class="ml-1 text-gray-600">followers</span>
+                    <div class="modal-container text-center">
+                        <div class="modal-btn text-center">
+                            <span class="font-semibold text-gray-900">{{ $user->followers()->count() }}</span>
+                            <span class="ml-1 text-gray-600">followers</span>
+                        </div>
+                        <x-follow-card :user="$user" name="followers" />
                     </div>
-                    <div class="text-center">
-                        <span class="font-semibold text-gray-900">0</span>
-                        <span class="ml-1 text-gray-600">following</span>
+                    <div class="modal-container text-center">
+                        <div class="modal-btn text-center">
+                            <span class="font-semibold text-gray-900">{{ $user->following()->count() }}</span>
+                            <span class="ml-1 text-gray-600">following</span>
+                        </div>
+                        <x-follow-card :user="$user" name="following" />
                     </div>
                 </div>
 
@@ -128,8 +134,37 @@
 
 
 <script>
+    // hide message (success)
     function hideMessage(message) {
         const el = document.getElementById(message);
         if (el) el.remove();
     }
+
+    // follow card toggle
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.modal-container').forEach((container) => {
+            const btn = container.querySelector('.modal-btn');
+            const overlay = container.querySelector('.modal-overlay');
+            const content = container.querySelector('.modal-content');
+            const closebtn = container.querySelector('.modal-close-btn');
+
+            // show the card
+            btn.addEventListener('click', () => {
+                overlay.classList.remove('hidden');
+                overlay.classList.add('flex');
+            })
+
+            // hide the card on button click
+            closebtn.addEventListener('click', () => {
+                overlay.classList.add('hidden');
+                overlay.classList.remove('flex');
+            })
+
+            // hide the card on outside click
+            overlay.addEventListener('click', () => {
+                overlay.classList.add('hidden');
+                overlay.classList.remove('flex');
+            })
+        });
+    });
 </script>

@@ -35,13 +35,18 @@
                 <div class="flex flex-col md:w-2/5">
                     <!-- Post Header -->
                     <div class="flex items-center justify-between border-b border-gray-200 p-4">
-                        <div class="flex items-center">
+                        <div class="flex items-center space-x-2">
                             @if ($post->user)
-                                <x-profile-img :user="$post->user" :isSmall="true" />
-                                <a href="{{ route('profile.show', $post->user->id) }}"
-                                    class="ml-3 font-semibold text-gray-900 hover:text-gray-700">
-                                    {{ $post->user->username ? $post->user->username : $post->user->name }}
-                                </a>
+                                <div class="flex items-center">
+                                    <x-profile-img :user="$post->user" :isSmall="true" />
+                                    <a href="{{ route('profile.show', $post->user->id) }}"
+                                        class="ml-3 font-semibold text-gray-900 hover:text-gray-700">
+                                        {{ $post->user->username ? $post->user->username : $post->user->name }}
+                                    </a>
+                                </div>
+                                <div>
+                                    <x-follow-button :post="$post" />
+                                </div>
                             @else
                                 <img src="https://via.placeholder.com/40" class="h-8 w-8 rounded-full object-cover">
                                 <span class="ml-3 text-gray-500">Deleted User</span>

@@ -10,13 +10,16 @@
             <div id="{{ $postId }}" class="mb-6 rounded-lg border border-gray-300 bg-white">
                 <!-- Post Header -->
                 <div class="flex items-center justify-between p-4">
-                    <div class="flex items-center">
+                    <div class="flex items-center space-x-2">
                         @if ($post->user)
-                            <x-profile-img :user="$post->user" :isSmall="true" />
                             <a href="{{ route('profile.show', $post->user->id) }}"
-                                class="ml-3 font-semibold text-gray-900 hover:text-gray-700">
-                                {{ $post->user->username }}
+                                class="flex cursor-pointer items-center space-x-2">
+                                <x-profile-img :user="$post->user" :isSmall="true" />
+                                <span
+                                    class="font-semibold text-gray-900 hover:text-gray-700">{{ $post->user->username ? $post->user->username : $post->user->name }}
+                                </span>
                             </a>
+                            <x-follow-button :post="$post" />
                         @else
                             <img src="https://via.placeholder.com/40" class="h-8 w-8 rounded-full object-cover">
                             <span class="ml-3 text-gray-500">Deleted User</span>
