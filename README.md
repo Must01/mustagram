@@ -1,115 +1,153 @@
-Instagram Clone – Laravel & MongoDB
+[![Demo](https://img.shields.io/badge/demo-mustagram.laravel.cloud-brightgreen)](https://mustagram.laravel.cloud) [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE) [![MongoDB](https://img.shields.io/badge/database-MongoDB-green.svg)](https://www.mongodb.com/) [![Cloudinary](https://img.shields.io/badge/images-Cloudinary-blueviolet.svg)](https://cloudinary.com/)
 
-A full-stack Instagram-like web application built with Laravel and MongoDB, where users can create accounts, upload multiple images, like posts, and comment. This project was inspired by the FreeCodeCamp Full-Stack Instagram Clone tutorial and built with love for learning and improving full-stack development skills.
+# Mustagram — Instagram Clone (Laravel 12 + MongoDB)
 
-Features
+👉 **Live demo:** [mustagram.laravel.cloud](https://mustagram.laravel.cloud)
 
-User authentication (register, login, logout)
+I built Mustagram as a focused, production-style Instagram clone to practice full-stack development with **Laravel 12** and **TailwindCss** , **MongoDB** and **Cloudinary**. The app demonstrates practical architecture choices: a reusable image upload component, Cloudinary integration (optional), and a scalable follow system implemented as a dedicated collection. This repo collects the code, configuration notes, and the lessons I learned while building the app.
 
-Create, edit, and delete posts
+---
 
-Upload multiple images per post with preview support
+## Features
 
-Like and unlike posts
+-   Full authentication: register, login, logout
+-   Create / edit / delete / update posts with multiple-image support
+-   Client-side image previews before upload
+-   Like and unlike posts
+-   create / delete / like / unlike a Comment
+-   Profile page with editable profile picture and bio section
+-   Follow / unfollow users (stored in a `follows` collection)
+-   Responsive UI built with Tailwind CSS + Blade templates
+-   Reusable image upload component and carousel for multi-image posts
+-   Cloudinary integration for production image hosting (change it to local if u want to..)
 
-Comment on posts
+---
 
-Profile page with editable profile picture
+## Tech stack
 
-Responsive UI built with Tailwind CSS
+-   **Backend:** Laravel 12
+-   **Database:** MongoDB (local or Atlas)
+-   **Frontend:** Blade templates + Tailwind CSS
+-   **Storage:** Local public storage (development) or Cloudinary (production)
+-   **Image handling:** Custom reusable upload component with previews
 
-Carousel display for multiple images
+---
 
-Real-time error handling for forms
+## Get started
 
-Tech Stack
+### Prerequisites
 
-Backend: Laravel 12
+-   PHP compatible with Laravel 12
+-   Composer
+-   Node.js + npm
+-   MongoDB (local or Atlas)
+-   Cloudinary account (or use local storage but u need to rewrite some code)
 
-Database: MongoDB (local or Atlas)
+### Install & run locally
 
-Frontend: Blade + Tailwind CSS
+#### clone the project
 
-File Storage: Laravel Public Storage
-
-Image Handling: Custom reusable image upload component
-
-Installation
-
-Clone the repository:
-
-git clone https://github.com/Must01/instagram-clone.git
+```
+git clone https://github.com/Must01/mustagram.git
 cd instagram-clone
+```
 
-Install dependencies:
+#### installing dependencies
 
+```
 composer install
 npm install
 npm run dev
-
-Copy .env file and set environment variables:
-
-cp .env.example .env
 php artisan key:generate
+```
 
-Update your .env with:
+#### setting .env
 
-# MongoDB connection (local or Atlas)
+```
+cp .env.example .env
+```
 
+##### Local MongoDB:
+
+```
 DB_CONNECTION=mongodb
-DB_URI=mongodb://127.0.0.1:27017/instagram_clone # replace with your MongoDB URI if using Atlas
+DB_URI=mongodb://127.0.0.1:27017/instagram_clone
+```
 
-Note: You can connect the Mustagram app database using either your local MongoDB or MongoDB Atlas by changing the DB_URI in your .env file or environment variables.
+##### Atlas (URI):
 
-Run migrations (if any) and seeders:
+```
+DB_CONNECTION=mongodb
+DB_URI=mongodb+srv://<user>:<password>@cluster0.example.mongodb.net/instagram_clone
+```
 
-php artisan migrate
-php artisan db:seed
+##### Cloudinary :
 
-Run the application:
+```
+CLOUDINARY_URL=cloudinary://<api_key>:<api_secret>@<cloud_name>
+CLOUDINARY_SECURE=true
+# also change FILESYSTEM_DISK from local to cloundinary
+FILESYSTEM_DISK=cloudinary
+```
 
-php artisan serve
+## Cloudinary setup
 
-Visit http://127.0.0.1:8000 in your browser.
+### Install package (if not done yet)
 
-Usage
+```
+composer require cloudinary-labs/cloudinary-laravel
+php artisan cloudinary:install
+```
 
-Register a new user or login with existing credentials
+### Add the disk in config/filesystems.php:
 
-Go to Create Post to upload images and add a caption
+```
+'disks' => [
 
-Like or comment on posts
+    // ... other disks
 
-Edit your profile and change your profile picture
+    'cloudinary' => [
+            'driver' => 'cloudinary',
+            'key' => env('CLOUDINARY_KEY'),
+            'secret' => env('CLOUDINARY_SECRET'),
+            'cloud' => env('CLOUDINARY_CLOUD_NAME'),
+            'url' => env('CLOUDINARY_URL'),
+            'secure' => (bool) env('CLOUDINARY_SECURE', true),
+            'prefix' => env('CLOUDINARY_PREFIX'),
+        ],
+],
 
-Each post has a menu to edit or delete (if it’s yours)
+```
 
-Notes / Tips
+### usage in the code
 
-The image upload component supports multiple images with previews before submission
+```
+// Store and get secure URL
+$uploadedFileUrl = Storage::disk('cloudinary')->put('folder_name', $request->file('image'));
 
-Old images are preserved when editing a post
+$url = Storage::disk('cloudinary')->url($uploadedFileUrl);
+```
 
-Maximum image size: 2MB
+---
 
-Allowed formats: JPEG, PNG, JPG, GIF, SVG
+## Deployment notes
 
-Contributing
+-   Demo hosted on [Laravel Cloud](https://cloud.laravel.com)
+-   DataBase on [MongoDB Atlas](https://www.mongodb.com/products/platform/atlas-database)
+-   Images on [Cloudinary](https://cloudinary.com)
+-   Store sensitive values (DB_URI, CLOUDINARY_URL) in laravel cloud environment variables.
 
-Feel free to open issues or submit pull requests! This project is a learning project, so all contributions to improve features or fix bugs are welcome.
+---
 
-License
+## Contributing
 
-This project is open-source. You can use it for learning purposes or personal projects.
+If you or others want to improve the project, please:
 
-Screenshots / Demo
+-   Open an issue if you find bugs or want to suggest improvements
+-   Submit a PR with tests or clear examples
 
-(Replace with actual screenshots or GIFs of your app)
+---
 
-Home feed
+## License
 
-Post creation with image preview
-
-Profile page
-
-Post carousel
+MIT.

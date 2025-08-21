@@ -52,7 +52,7 @@
                     </div>
 
                     <!-- Profile Image Field -->
-                    <x-image-upload name="image" :multiple="false" />
+                    <x-image-upload name="image" :user="$user" :multiple="false" />
 
                     {{-- Errors --}}
                     @if ($errors->any())

@@ -103,20 +103,17 @@
                         @foreach ($post->comments as $comment)
                             <div class="my-2 flex items-start justify-between">
                                 {{-- comment user / content --}}
-                                <div class="flex">
+                                <div class="flex items-center gap-x-1">
                                     @if ($comment->user)
                                         @if (auth()->user()->profile_img)
-                                            <img src="{{ Storage::disk('cloudinary')->url($comment->user->profile_img) }}"
-                                                class="h-5.5 w-5.5 border-1 rounded-full border-gray-200 object-cover shadow-lg">
+                                            <x-profile-img :user="$comment->user" isSmall="true" />
                                         @else
                                             <span
                                                 class="h-5.5 w-5.5 flex cursor-pointer items-center justify-center rounded-full bg-gray-500 text-6xl font-bold text-gray-900">{{ strtoupper(substr(auth()->user()->name, 0, 1)) }}</span>
                                         @endif
-                                        <p class="text-[13px] text-gray-900">
-                                            <span
-                                                class="ml-0.5 mr-0.5 text-xs font-semibold text-gray-900">{{ $comment->user->name }}</span>
-                                            {{ $comment->comment }}
-                                        </p>
+                                        <span
+                                            class="ml-0.5 mr-0.5 text-[13px] font-semibold text-gray-900">{{ $comment->user->name }}</span>
+                                        <p class="text-xs">{{ $comment->comment }}</p>
                                     @else
                                         <span class="mr-2 font-semibold text-gray-500">Deleted User</span>
                                     @endif

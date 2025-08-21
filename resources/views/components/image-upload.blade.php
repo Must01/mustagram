@@ -1,4 +1,4 @@
-@props(['name' => 'images', 'post' => null, 'multiple' => true])
+@props(['name' => 'images', 'user' => null, 'post' => null, 'multiple' => true])
 
 <div class="space-y-2">
     <!-- Image Upload Input -->
@@ -12,7 +12,8 @@
 
     <!-- Preview Container -->
     <div id="preview-area"
-        class="flex min-h-[100px] flex-wrap gap-2 rounded-lg border-2 border-dashed border-gray-200 bg-gray-50 p-4">
+        class="{{ $multiple ? 'flex-wrap gap-2' : 'justify-center items-center' }} flex min-h-[100px] rounded-lg border-2 border-dashed border-gray-200 bg-gray-50 p-4">
+        {{-- for post images --}}
         @isset($post->image_path)
             @foreach ($post->image_path as $image)
                 <div id="old-images" class="group relative m-1 inline-block" data-image="{{ $image }}">
@@ -21,11 +22,24 @@
                     <button type="button"
                         class="absolute -right-2 -top-2 flex h-6 w-6 transform cursor-pointer items-center justify-center rounded-full bg-red-500 text-xs font-bold text-white opacity-0 shadow-md transition-all duration-200 hover:scale-110 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-300 active:bg-red-700 group-hover:opacity-100"
                         onclick="removeOldImage('{{ $image }}')">
-                        X
+
                     </button>
                     <input type="hidden" name="oldImages[]" value="{{ $image }}">
                 </div>
             @endforeach
+        @endisset
+        {{-- for profile images --}}
+        @isset($user->profile_img)
+            <div id="old-images" class="group relative m-1 inline-block" data-image="{{ $user->profile_img }}">
+                <img src="{{ Storage::disk('cloudinary')->url($user->profile_img) }}"
+                    class="aspect-square h-32 w-32 rounded-full border-4 border-white object-cover shadow-lg ring-2 ring-gray-200 transition-all duration-300 group-hover:ring-blue-300">
+                <button type="button"
+                    class="absolute -right-2 -top-2 flex h-8 w-8 transform cursor-pointer items-center justify-center rounded-full bg-red-500 text-sm font-bold text-white shadow-lg transition-all duration-200 hover:scale-110 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-300 active:bg-red-700"
+                    onclick="removeOldImage('{{ $user->profile_img }}')">
+                    X
+                </button>
+                <input type="hidden" name="oldImages[]" value="{{ $user->profile_img }}">
+            </div>
         @endisset
     </div>
 

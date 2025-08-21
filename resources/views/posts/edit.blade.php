@@ -37,7 +37,7 @@
 
                     <!-- Images -->
                     <div class="w-full p-0.5">
-                        <x-image-upload name="images" :post="$post" />
+                        <x-image-upload name="images" :user="$user" />
 
                     </div>
 

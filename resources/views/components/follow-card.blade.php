@@ -10,6 +10,7 @@
         </div>
 
         @if ($name === 'following')
+            {{-- following --}}
             <div class="flex items-center justify-between">
                 @foreach ($user->followingUsers()->with('following')->get()->pluck('following') as $follower)
                     <div class="flex items-center space-x-2 px-2 py-1">
@@ -29,7 +30,8 @@
                 @endforeach
             </div>
         @else
-            <div>
+            {{-- followers --}}
+            <div class="flex items-center justify-between">
                 @foreach ($user->followersUsers()->with('follower')->get()->pluck('follower') as $follower)
                     <div class="flex items-center space-x-2 px-2 py-1">
                         <x-profile-img :isSmall="true" :user="$follower" />

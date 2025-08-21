@@ -5,6 +5,10 @@
 @source '../**/*.blade.php';
 @source '../**/*.js';
 
+* {
+    box-sizing: border-box;
+}
+
 @font-face {
     font-family: "playwrite";
     src: url("../fonts/PlaywriteAUQLD-VariableFont_wght.ttf") format("truetype");

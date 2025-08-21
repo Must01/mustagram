@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('content')
-    <div class="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
+    <div class="mx-auto max-w-6xl sm:px-6 lg:px-8">
         <!-- Profile Header Section -->
         <div class="mb-12 flex flex-col items-center gap-8 md:flex-row md:items-start">
             <!-- Profile Image -->
@@ -15,28 +15,30 @@
                     <h1 class="text-3xl font-light text-gray-900">{{ $user->username }}</h1>
                     @if (auth()->id() === $user->id)
                         <a href="{{ route('profile.edit', $user->id) }}"
-                            class="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 transition-colors duration-200 hover:bg-gray-50">
+                            class="rounded-lg border border-gray-300 px-2 py-1 text-sm text-gray-700 transition-colors duration-200 hover:bg-gray-100 sm:px-4 sm:py-2 sm:text-lg">
                             Edit Profile
                         </a>
                     @endif
                 </div>
 
                 <!-- Stats -->
-                <div class="mb-6 flex justify-center gap-8 md:justify-start">
-                    <div class="text-center">
-                        <span class="font-semibold text-gray-900">{{ $user->posts->count() }}</span>
+                <div class="mb-3 flex justify-center gap-8 sm:mb-6 md:justify-start">
+                    <div class="rounded-md p-1 text-center text-sm font-normal sm:px-2 sm:py-1 sm:text-lg sm:font-semibold">
+                        <span class="text-gray-900">{{ $user->posts->count() }}</span>
                         <span class="ml-1 text-gray-600">posts</span>
                     </div>
-                    <div class="modal-container text-center">
-                        <div class="modal-btn text-center">
-                            <span class="font-semibold text-gray-900">{{ $user->followers()->count() }}</span>
+                    <div
+                        class="modal-container cursor-pointer rounded-md p-1 text-center text-sm font-normal transition-colors duration-200 hover:bg-indigo-50 sm:px-2 sm:py-1 sm:text-lg sm:font-semibold">
+                        <div class="modal-btn">
+                            <span class="text-gray-900">{{ $user->followers()->count() }}</span>
                             <span class="ml-1 text-gray-600">followers</span>
                         </div>
                         <x-follow-card :user="$user" name="followers" />
                     </div>
-                    <div class="modal-container text-center">
-                        <div class="modal-btn text-center">
-                            <span class="font-semibold text-gray-900">{{ $user->following()->count() }}</span>
+                    <div
+                        class="modal-container cursor-pointer rounded-md p-1 text-center text-sm font-normal transition-colors duration-200 hover:bg-indigo-50 sm:px-2 sm:py-1 sm:text-lg sm:font-semibold">
+                        <div class="modal-btn">
+                            <span class="text-gray-900">{{ $user->following()->count() }}</span>
                             <span class="ml-1 text-gray-600">following</span>
                         </div>
                         <x-follow-card :user="$user" name="following" />
@@ -45,7 +47,7 @@
 
                 <!-- Name and Bio -->
                 <div class="max-w-lg">
-                    <h2 class="mb-2 font-semibold text-gray-900">{{ $user->name }}</h2>
+                    <h2 class="font-semibold text-gray-900">{{ $user->name }}</h2>
                     @if ($user->bio)
                         <p class="leading-relaxed text-gray-600">{{ $user->bio }}</p>
                     @endif
@@ -80,8 +82,8 @@
 
         <!-- Posts Grid -->
         @if ($user->posts->count() > 0)
-            <div class="border-t border-gray-200 pt-8">
-                <div class="grid grid-cols-3 gap-4 sm:grid-cols-2 md:gap-6 lg:grid-cols-3">
+            <div class="border-t border-gray-200 pt-2 sm:pt-4">
+                <div class="grid grid-cols-3 gap-0.5 sm:grid-cols-2 sm:gap-4 md:gap-6 lg:grid-cols-3">
                     @foreach ($user->posts as $post)
                         <a href="{{ route('posts.show', $post->id) }}" class="block h-full w-full">
                             <div class="group relative aspect-square cursor-pointer">
