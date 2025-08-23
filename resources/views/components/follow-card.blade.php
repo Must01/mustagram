@@ -9,7 +9,7 @@
             </button>
         </div>
 
-        @if ($user->followingUsers()->with('following')->pluck('following')->count() > 0)
+        @if ($user && $user->followingUsers()->with('following')->pluck('following')->count() > 0)
             @if ($name === 'following')
                 {{-- following --}}
                 <div class="flex flex-col items-center justify-between">
@@ -40,12 +40,15 @@
                 <div class="flex flex-col items-center justify-between">
                     @foreach ($user->followersUsers()->with('follower')->get()->pluck('follower') as $follower)
                         <div class="flex w-full">
-                            <div class="flex flex-1 items-center space-x-2 px-2 py-1">
-                                <x-profile-img :isSmall="true" :user="$follower" />
-                                <div class="flex flex-col">
-                                    <span class="sm:text-md text-xs font-bold">{{ $follower->username }}</span>
-                                    <span class="text-xs sm:text-sm">{{ $follower->name }}</span>
-                                </div>
+                            <div class="flex flex-1 items-center">
+                                <a href="{{ route('profile.show', $follower) }}"
+                                    class="flex items-center space-x-2 px-2 py-1">
+                                    <x-profile-img :isSmall="true" :user="$follower" />
+                                    <div class="flex flex-col">
+                                        <span class="sm:text-md text-xs font-bold">{{ $follower->username }}</span>
+                                        <span class="text-xs sm:text-sm">{{ $follower->name }}</span>
+                                    </div>
+                                </a>
                             </div>
                             @if ($user->id === auth()->user()->id)
                                 <form action="{{ route('unfollow', $follower) }}" method="POST" class="flex-none">
