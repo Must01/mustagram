@@ -3,7 +3,7 @@
 
     <head>
         <meta charset="utf-8" />
-        <link rel="icon" href="{{ asset('favicon.png') }}" type="image/x-icon">
+        <link rel="icon" href="{{ asset('mustagram-logo.png') }}" type="image/x-icon">
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="csrf-token" content="{{ csrf_token() }}" />
         <title>{{ config('app.name', 'MustaGram') }}</title>
@@ -146,7 +146,7 @@
             <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">@csrf</form>
 
             <!-- Main Content Area -->
-            <main class="mx-auto w-full max-w-5xl flex-grow px-4 py-8">
+            <main class="mx-auto w-full max-w-5xl flex-grow px-1 py-8 sm:px-4">
                 @yield('content')
             </main>
             <!--  footer  -->
