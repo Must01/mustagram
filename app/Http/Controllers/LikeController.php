@@ -17,7 +17,7 @@ class LikeController extends Controller
      * Like a post. 
      */
     public function likePost(Post $post) {
-        $post->likes()->create([
+        $post->likes()->updateOrCreate([
             'user_id' => auth()->id(),
         ]);
 
@@ -37,7 +37,7 @@ class LikeController extends Controller
      */
 
     public function likeComment(Comment $comment) {
-        $comment->likes()->create([
+        $comment->likes()->updateOrCreate([
             'user_id' => auth()->id(),
         ]);
 

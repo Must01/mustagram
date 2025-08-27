@@ -19,7 +19,7 @@
                         <label for="name" class="sr-only">{{ __('Full Name') }}</label>
                         <input id="name" type="text" name="name" value="{{ old('name') }}" required
                             autocomplete="name" autofocus placeholder="Full name"
-                            class="@error('name') border-red-500 @enderror w-full rounded-md border border-gray-300 px-3 py-2 text-sm placeholder-gray-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500">
+                            class="@error('name') border-red-500 @enderror w-full rounded-md border border-gray-300 px-3 py-2 text-sm placeholder-gray-500 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500">
 
                         @error('name')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -31,7 +31,7 @@
                         <label for="email" class="sr-only">{{ __('Email Address') }}</label>
                         <input id="email" type="email" name="email" value="{{ old('email') }}" required
                             autocomplete="email" placeholder="Email address"
-                            class="@error('email') border-red-500 @enderror w-full rounded-md border border-gray-300 px-3 py-2 text-sm placeholder-gray-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500">
+                            class="@error('email') border-red-500 @enderror w-full rounded-md border border-gray-300 px-3 py-2 text-sm placeholder-gray-500 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500">
 
                         @error('email')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -43,7 +43,7 @@
                         <label for="password" class="sr-only">{{ __('Password') }}</label>
                         <input id="password" type="password" name="password" required autocomplete="new-password"
                             placeholder="Password"
-                            class="@error('password') border-red-500 @enderror w-full rounded-md border border-gray-300 px-3 py-2 text-sm placeholder-gray-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500">
+                            class="@error('password') border-red-500 @enderror w-full rounded-md border border-gray-300 px-3 py-2 text-sm placeholder-gray-500 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500">
 
                         @error('password')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -55,7 +55,7 @@
                         <label for="password-confirm" class="sr-only">{{ __('Confirm Password') }}</label>
                         <input id="password-confirm" type="password" name="password_confirmation" required
                             autocomplete="new-password" placeholder="Confirm password"
-                            class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm placeholder-gray-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500">
+                            class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm placeholder-gray-500 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500">
                     </div>
 
                     <!-- Terms -->
@@ -66,7 +66,7 @@
                     <!-- Submit Button -->
                     <div>
                         <button type="submit"
-                            class="w-full rounded-md bg-blue-500 px-4 py-2 text-sm font-semibold text-white transition-colors duration-200 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                            class="w-full rounded-md bg-indigo-500 px-4 py-2 text-sm font-semibold text-white transition-colors duration-200 hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
                             {{ __('Sign Up') }}
                         </button>
                     </div>
@@ -77,7 +77,7 @@
             <div class="rounded-lg border border-gray-300 bg-white p-4 text-center">
                 <p class="text-sm text-gray-600">
                     Have an account?
-                    <a href="{{ route('login') }}" class="font-semibold text-blue-500 hover:text-blue-600">
+                    <a href="{{ route('login') }}" class="font-semibold text-indigo-500 hover:text-indigo-600">
                         Log in
                     </a>
                 </p>

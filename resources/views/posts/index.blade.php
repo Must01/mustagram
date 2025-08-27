@@ -1,6 +1,4 @@
 @extends('layouts.app')
-
-
 @section('content')
     <div class="mx-auto max-w-2xl">
         @foreach ($posts as $post)
@@ -16,12 +14,13 @@
                                 class="flex cursor-pointer items-center space-x-2">
                                 <x-profile-img :user="$post->user" :isSmall="true" />
                                 <span
-                                    class="sm:text-md text-sm font-semibold text-gray-900 hover:text-gray-700">{{ $post->user->username ? $post->user->username : $post->user->name }}
+                                    class="text-sm font-semibold text-gray-900 hover:text-gray-700 sm:text-base">{{ $post->user->username ? $post->user->username : $post->user->name }}
                                 </span>
                             </a>
-                            <x-follow-button :post="$post" />
+                            <x-follow-button type="post" :post="$post" />
                         @else
-                            <img src="https://via.placeholder.com/40" class="h-8 w-8 rounded-full object-cover">
+                            <img loading="lazy" src="https://via.placeholder.com/40"
+                                class="h-8 w-8 rounded-full object-cover">
                             <span class="ml-3 text-gray-500">Deleted User</span>
                         @endif
                     </div>
@@ -91,26 +90,26 @@
                         @endif
 
                         <a href="{{ route('posts.show', $post->id) }}" class="text-gray-700 hover:text-gray-900">
-                            <svg class="h-5 w-5 sm:h-6 sm:w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                            </svg>
+                            <x-icon format="png" icon="black-comment" />
                         </a>
                     </div>
 
-                    <a href="{{ route('posts.show', $post->id) }}">
-                        <!-- Like Count -->
-                        <div class="mb-2">
-                            <span class="text-xs font-semibold text-gray-800 sm:text-sm">{{ $post->likes->count() }}
-                                likes</span>
+                    <!-- Like Count -->
+                    <div
+                        class="likes-modal-container cursor-pointer text-center text-sm font-normal sm:text-lg sm:font-semibold">
+                        <div class="likes-modal-btn text-start">
+                            <span class="flex-start text-gray-900">{{ $post->likes->count() }} likes</span>
                         </div>
+                        <x-likes-card :user="$post" name="post" />
+                    </div>
 
+                    <a href="{{ route('posts.show', $post->id) }}">
                         <!-- Caption -->
                         <div class="mb-2">
                             @if ($post->user)
                                 <span class="mr-1 font-semibold text-gray-900">{{ $post->user->username }}</span>
                             @endif
-                            <span class="sm:text-md text-xs text-gray-900">{{ $post->caption }}</span>
+                            <span class="text-xs text-gray-900 sm:text-base">{{ $post->caption }}</span>
                         </div>
                     </a>
 
@@ -132,6 +131,8 @@
             </div>
         @endforeach
 
+        {!! $posts->links() !!}
+
         @if ($posts->isEmpty())
             <div class="py-12 text-center">
                 <div class="mx-auto mb-4 flex h-24 w-24 items-center justify-center rounded-full bg-gray-100">
@@ -151,4 +152,32 @@
     </div>
 @endsection
 
-<script></script>
+<script>
+    // likes modal 
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.likes-modal-container').forEach((container) => {
+            const btn = container.querySelector('.likes-modal-btn');
+            const overlay = container.querySelector('.likes-modal-overlay');
+            const content = container.querySelector('.likes-modal-content');
+            const closebtn = container.querySelector('.likes-modal-close-btn');
+
+            // show the card
+            btn.addEventListener('click', () => {
+                overlay.classList.remove('hidden');
+                overlay.classList.add('flex');
+            })
+
+            // hide the card on button click
+            closebtn.addEventListener('click', () => {
+                overlay.classList.add('hidden');
+                overlay.classList.remove('flex');
+            })
+
+            // hide the card on outside click
+            overlay.addEventListener('click', () => {
+                overlay.classList.add('hidden');
+                overlay.classList.remove('flex');
+            })
+        });
+    });
+</script>

@@ -99,7 +99,7 @@
                                 <p class="text-xs text-blue-600">Image Storage</p>
                             </div>
                         </a>
-                        <a href="https://github.com/Must01/instagram-clone" target="_blank"
+                        <a href="https://github.com/Must01/mustagram" target="_blank"
                             class="group flex items-center justify-center gap-3 rounded-lg border border-gray-100 bg-gray-50 px-4 py-3 text-center transition-colors hover:bg-gray-100">
                             <x-icon icon="github" />
                             <div>

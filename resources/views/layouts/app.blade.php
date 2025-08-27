@@ -3,7 +3,7 @@
 
     <head>
         <meta charset="utf-8" />
-        <link rel="icon" href="{{ asset('mustagram-logo.png') }}" type="image/x-icon">
+        <link rel="icon" href="{{ asset('indigo-mustagram.png') }}" type="image/x-icon">
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="csrf-token" content="{{ csrf_token() }}" />
         <title>{{ config('app.name', 'MustaGram') }}</title>
@@ -15,131 +15,84 @@
 
             <!-- NAVBAR: three regions (left / center / right) -->
             <nav class="border-b border-gray-200 bg-white shadow-sm">
-                <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                    <div class="flex h-16 items-center justify-between">
-
+                {{-- disktop nav --}}
+                <div class="mx-auto hidden max-w-7xl px-4 sm:block sm:px-6 lg:px-8">
+                    <div class="flex h-14 items-center justify-between">
                         <!-- LEFT: logo + Feed -->
                         <div class="flex items-center space-x-6">
                             <!-- logo -->
                             <a href="{{ url('/') }}"
-                                class="font-[playwrite] text-lg font-semibold tracking-wide text-indigo-600">
+                                class="hidden font-[playwrite] text-lg font-semibold tracking-wide text-indigo-600 sm:inline">
                                 mustagram
                             </a>
 
                             <!-- Feed (visible only to authenticated users) -->
                             @auth
-                                <a href="{{ route('posts.index') }}"
-                                    class="text-sm font-medium text-gray-600 transition-colors hover:text-indigo-600">
-                                    Feed
-                                </a>
+                                <x-nav-link href="{{ route('posts.index') }}" :active="request()->is('posts') || request()->is('') || request()->is('/posts/{id}')">Feed</x-nav-link>
+                                <x-nav-link href="{{ route('posts.create') }}" :active="request()->is('posts/create')">create</x-nav-link>
                             @endauth
 
-                            <a href="{{ route('about') }}"
-                                class="text-sm font-medium text-gray-600 transition-colors hover:text-indigo-600">
-                                about
-                            </a>
-                        </div>
-
-                        <!-- CENTER: intentionally empty for minimal look -->
-                        <div class="hidden items-center justify-center md:flex">
-
+                            <x-nav-link href="{{ route('about') }}" :active="request()->is('about')">about</x-nav-link>
                         </div>
 
                         <!-- RIGHT: optional New button + avatar menu -->
-                        <div class="flex items-center space-x-3">
-
-                            <!-- Small "New" button (hidden on very small screens) -->
+                        <div class="flex items-center">
                             @auth
-                                <a href="{{ route('posts.create') }}"
-                                    class="hidden items-center rounded-md bg-indigo-600 px-3 py-1 text-sm text-white transition hover:bg-indigo-700 sm:inline-flex">
-                                    New
-                                </a>
-                            @endauth
-
-                            <!-- Avatar + Dropdown -->
-                            @auth
-                                <div class="relative">
-                                    <!-- Avatar button toggles the user menu -->
-                                    <button id="user-menu-button" aria-haspopup="true" aria-expanded="false"
-                                        class="flex items-center gap-2 rounded-md px-2 py-1 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                                        @if (auth()->user()->profile_img)
-                                            <img src="{{ Storage::disk('cloudinary')->url(auth()->user()->profile_img) }}"
-                                                alt="{{ auth()->user()->username }}"
-                                                class="h-8 w-8 rounded-full object-cover shadow-sm">
-                                        @else
-                                            <span
-                                                class="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-indigo-500 font-bold text-white">{{ strtoupper(substr(auth()->user()->name, 0, 1)) }}</span>
-                                        @endif
-                                    </button>
-
-                                    <!-- User menu: New Post / Profile / Logout -->
-                                    <div id="user-menu"
-                                        class="absolute right-0 z-20 mt-2 hidden w-44 rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5"
-                                        role="menu" aria-label="User menu">
-                                        <a href="{{ route('posts.create') }}"
-                                            class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-600"
-                                            role="menuitem">New Post</a>
-                                        <a href="{{ route('profile.show', auth()->user()->id) }}"
-                                            class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-600"
-                                            role="menuitem">Profile</a>
-
-                                        <!-- Logout uses a POST form for security (CSRF) -->
-                                        <form method="POST" action="{{ route('logout') }}" class="mt-1" role="none">
-                                            @csrf
-                                            <button type="submit"
-                                                class="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50"
-                                                role="menuitem">Logout</button>
-                                        </form>
+                                <div
+                                    class="profile-modal-container cursor-pointer text-center text-sm font-normal sm:text-lg sm:font-semibold">
+                                    <div class="profile-modal-btn text-start">
+                                        <button id="profile-menu-button" aria-haspopup="true" aria-expanded="false"
+                                            class="flex items-center gap-2 rounded-md px-2 py-1 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                            <x-profile-img />
+                                        </button>
                                     </div>
+                                    <x-profile-menu />
                                 </div>
                             @else
-                                <!-- If guest, show Login/Register buttons on right side for better balance -->
                                 <div class="flex items-center space-x-2">
-                                    @if (Route::has('login'))
-                                        <a href="{{ route('login') }}"
-                                            class="text-sm text-gray-600 transition-colors hover:text-indigo-600">Login</a>
-                                    @endif
-                                    @if (Route::has('register'))
-                                        <a href="{{ route('register') }}"
-                                            class="rounded-lg bg-indigo-600 px-3 py-1 text-sm text-white transition hover:bg-indigo-700">Register</a>
-                                    @endif
+                                    <x-nav-link href="{{ route('login') }}" :active="request()->is('login')">Login</x-nav-link>
+                                    <x-nav-link href="{{ route('register') }}" :active="request()->is('register')">register</x-nav-link>
                                 </div>
                             @endauth
 
                         </div>
                     </div>
                 </div>
+                {{-- mobile nav --}}
+                @auth
+                    <div class="border-t-1 fixed bottom-0 z-50 block w-full border-gray-500 bg-white p-1 sm:hidden">
+                        <!-- mobile menu items -->
+                        <div class="flex items-center justify-around">
 
-                <!-- MOBILE MENU: toggled by hamburger, keep links readable and stacked -->
-                <div id="mobile-menu" class="hidden border-t border-gray-200 md:hidden">
-                    <div class="space-y-1 bg-gray-50 px-2 pb-3 pt-2">
-                        @guest
-                            @if (Route::has('login'))
-                                <a href="{{ route('login') }}"
-                                    class="block rounded-lg px-3 py-2 text-gray-600 transition-colors duration-200 hover:bg-white hover:text-indigo-600">Login</a>
-                            @endif
-                            @if (Route::has('register'))
-                                <a href="{{ route('register') }}"
-                                    class="block rounded-lg bg-indigo-600 px-3 py-2 text-center text-white transition-colors duration-200 hover:bg-indigo-700">Register</a>
-                            @endif
-                        @else
-                            @auth
-                                <a href="{{ route('posts.index') }}"
-                                    class="block rounded-lg px-3 py-2 text-gray-600 transition-colors duration-200 hover:bg-white hover:text-indigo-600">Feed</a>
-                                <a href="{{ route('posts.create') }}"
-                                    class="block rounded-lg px-3 py-2 text-gray-600 transition-colors duration-200 hover:bg-white hover:text-indigo-600">New
-                                    Post</a>
-                                <a href="{{ route('profile.show', auth()->user()->id) }}"
-                                    class="block rounded-lg px-3 py-2 text-gray-600 transition-colors duration-200 hover:bg-white hover:text-indigo-600">Profile</a>
-                                <form method="POST" action="{{ route('logout') }}">
-                                    @csrf
-                                    <button type="submit"
-                                        class="w-full px-3 py-2 text-left text-gray-600 hover:bg-red-50">Logout</button>
-                                </form>
-                            @endauth
-                        @endguest
+                            <!-- logo -->
+                            <a href="{{ url('/') }}"
+                                class="inline font-[playwrite] text-lg font-semibold tracking-wide text-indigo-600 sm:hidden">
+                                <img loading="lazy" src="{{ asset('black-mustagram.png') }}" alt="mustagram"
+                                    class="h-8 w-8 rounded-lg bg-transparent p-1 hover:bg-indigo-100" />
+                            </a>
+
+                            <!-- Feed -->
+                            <x-nav-link icon="compass" :isMobile="true" href="{{ route('posts.index') }}"
+                                :active="request()->is('posts')" />
+
+                            <x-nav-link icon="plus" :isMobile="true" href="{{ route('posts.create') }}"
+                                :active="request()->is('posts/create')" />
+
+                            <x-nav-link icon="info" :isMobile="true" href="{{ route('about') }}" :active="request()->is('about')" />
+
+                            <div
+                                class="profile-modal-container cursor-pointer text-center text-sm font-normal sm:text-lg sm:font-semibold">
+                                <div class="profile-modal-btn text-start">
+                                    <button id="profile-menu-button" aria-haspopup="true" aria-expanded="false"
+                                        class="flex items-center gap-2 rounded-md px-2 py-1 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                        <x-profile-img />
+                                    </button>
+                                </div>
+                                <x-profile-menu />
+                            </div>
+                        </div>
                     </div>
-                </div>
+                @endauth
             </nav>
 
             <!-- Hidden logout form (kept for compatibility with older inline-trigger patterns) -->
@@ -154,5 +107,40 @@
 
         </div>
     </body>
+
+    <script>
+        // mobile menu modal
+        document.addEventListener("DOMContentLoaded", () => {
+            document
+                .querySelectorAll(".profile-modal-container")
+                .forEach((container) => {
+                    const btn = container.querySelector(".profile-modal-btn");
+                    const overlay = container.querySelector(".profile-modal-overlay");
+                    const content = container.querySelector(".profile-modal-content");
+                    const closebtn = container.querySelector(
+                        ".profile-modal-close-btn"
+                    );
+
+                    // show the card
+                    btn.addEventListener("click", () => {
+                        overlay.classList.remove("hidden");
+                        overlay.classList.add("flex");
+                        console.log("you clicked me hehe 😋");
+                    });
+
+                    // hide the card on button click
+                    closebtn.addEventListener("click", () => {
+                        overlay.classList.add("hidden");
+                        overlay.classList.remove("flex");
+                    });
+
+                    // hide the card on outside click
+                    overlay.addEventListener("click", () => {
+                        overlay.classList.add("hidden");
+                        overlay.classList.remove("flex");
+                    });
+                });
+        });
+    </script>
 
 </html>

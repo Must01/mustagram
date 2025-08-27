@@ -17,12 +17,12 @@
         @isset($post->image_path)
             @foreach ($post->image_path as $image)
                 <div id="old-images" class="group relative m-1 inline-block" data-image="{{ $image }}">
-                    <img src="{{ Storage::disk('cloudinfary')->url($image) }}"
+                    <img loading="lazy" src="{{ Storage::disk('cloudinary')->url($image) }}"
                         class="h-24 w-24 rounded-xl border-2 border-gray-100 object-cover shadow-md transition-all duration-300 group-hover:scale-105 group-hover:shadow-lg">
                     <button type="button"
                         class="absolute -right-2 -top-2 flex h-6 w-6 transform cursor-pointer items-center justify-center rounded-full bg-red-500 text-xs font-bold text-white opacity-0 shadow-md transition-all duration-200 hover:scale-110 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-300 active:bg-red-700 group-hover:opacity-100"
                         onclick="removeOldImage('{{ $image }}')">
-
+                        <x-icon icon="remove" format="png" size="w-3 h-3" />
                     </button>
                     <input type="hidden" name="oldImages[]" value="{{ $image }}">
                 </div>
@@ -31,7 +31,7 @@
         {{-- for profile images --}}
         @isset($user->profile_img)
             <div id="old-images" class="group relative m-1 inline-block" data-image="{{ $user->profile_img }}">
-                <img src="{{ Storage::disk('cloudinary')->url($user->profile_img) }}"
+                <img loading="lazy" src="{{ Storage::disk('cloudinary')->url($user->profile_img) }}"
                     class="aspect-square h-32 w-32 rounded-full border-4 border-white object-cover shadow-lg ring-2 ring-gray-200 transition-all duration-300 group-hover:ring-blue-300">
                 <button type="button"
                     class="absolute -right-2 -top-2 flex h-8 w-8 transform cursor-pointer items-center justify-center rounded-full bg-red-500 text-sm font-bold text-white shadow-lg transition-all duration-200 hover:scale-110 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-300 active:bg-red-700"

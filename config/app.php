@@ -1,5 +1,6 @@
 <?php
 
+
 return [
 
     /*
@@ -13,7 +14,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Mustagram'),
+    'name' => env('APP_NAME', 'mustagram'),
 
     /*
     |--------------------------------------------------------------------------

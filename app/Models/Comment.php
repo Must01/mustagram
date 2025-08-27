@@ -16,15 +16,25 @@ class Comment extends Model
         'post_id',
     ];
 
-    public function post() {
+    public function post()
+    {
         return $this->belongsTo(Post::class);
     }
 
-    public function user() {
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
 
-    public function likes() {
+    public function likes()
+    {
         return $this->hasMany(Like::class);
+    }
+
+    public function commentLikes()
+    {
+        $likes = Like::where('comment_id', $this->id)->get()->pluck('user_id');
+
+        return User::whereIn('_id', $likes)->get();
     }
 }

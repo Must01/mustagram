@@ -1,31 +1,9 @@
 @extends('layouts.app')
 @section('content')
-    <div class="mx-auto max-w-5xl px-4">
+    <div class="mx-auto max-w-5xl px-2 sm:px-4">
         <div class="overflow-hidden rounded-lg border border-gray-300 bg-white">
             <!-- success messages -->
-            @if (session('success'))
-                <div id="success" class="mb-4 flex items-center border-t-4 border-green-300 bg-green-50 p-4 text-green-800"
-                    role="alert">
-                    <svg class="h-4 w-4 shrink-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
-                        viewBox="0 0 20 20">
-                        <path
-                            d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
-                    </svg>
-                    <div class="ms-3 text-sm font-medium">
-                        {{ session('success') }}
-                    </div>
-                    <button type="button" onclick='hideMessage("success")'
-                        class="-mx-1.5 -my-1.5 ms-auto inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg bg-green-50 p-1.5 text-green-500 hover:bg-green-200 focus:ring-2 focus:ring-green-400"
-                        data-dismiss-target="#alert-border-3" aria-label="Close">
-                        <span class="sr-only">Dismiss</span>
-                        <svg class="h-3 w-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                            viewBox="0 0 14 14">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
-                        </svg>
-                    </button>
-                </div>
-            @endif ()
+            <x-message />
 
             <div class="md:flex">
                 <!-- Image Section -->
@@ -34,7 +12,7 @@
                 <!-- Content Section -->
                 <div class="flex flex-col md:w-2/5">
                     <!-- Post Header -->
-                    <div class="flex items-center justify-between border-b border-gray-200 p-4">
+                    <div class="flex items-center justify-between border-b border-gray-200 p-2 sm:p-3">
                         <div class="flex items-center space-x-2">
                             @if ($post->user)
                                 <div class="flex items-center">
@@ -48,7 +26,8 @@
                                     <x-follow-button :post="$post" />
                                 </div>
                             @else
-                                <img src="https://via.placeholder.com/40" class="h-8 w-8 rounded-full object-cover">
+                                <img loading="lazy" src="https://via.placeholder.com/40"
+                                    class="h-8 w-8 rounded-full object-cover">
                                 <span class="ml-3 text-gray-500">Deleted User</span>
                             @endif
                         </div>
@@ -85,13 +64,15 @@
                     </div>
 
                     <!-- Caption Section -->
-                    <div class="h-fit min-h-20 flex-1 overflow-y-auto p-4">
+                    <div class="h-fit min-h-10 overflow-y-auto p-2">
                         <!-- Caption -->
                         @if ($post->user)
-                            <div class="flex items-center">
+                            <div class="flex items-center space-x-1">
                                 <x-profile-img :user="$post->user" :isSmall="true" />
-                                <span class="ml-2 mr-2 font-semibold text-gray-900">{{ $post->user->username }}</span>
-                                <span class="text-gray-900">{{ $post->caption }}</span>
+                                <p class="text-xs sm:ml-1 sm:text-sm">
+                                    <span class="font-semibold text-gray-900">{{ $post->user->username }}</span>
+                                    {{ $post->caption }}
+                                </p>
                             </div>
                         @else
                             <div class="text-gray-900">{{ $post->caption }}</div>
@@ -99,80 +80,91 @@
                     </div>
 
                     <!-- Comments -->
-                    <div class="border-t border-gray-200 px-2">
-                        @foreach ($post->comments as $comment)
-                            <div class="my-2 flex items-start justify-between">
-                                {{-- comment user / content --}}
-                                <div class="flex items-center gap-x-1">
-                                    @if ($comment->user)
-                                        @if (auth()->user()->profile_img)
-                                            <x-profile-img :user="$comment->user" isSmall="true" />
-                                        @else
+                    <div class="min-h-10 flex-1 space-y-1 overflow-y-auto overflow-x-hidden border-t border-gray-200 px-2">
+                        @if ($post->comments->count() > 0)
+                            @foreach ($post->comments as $comment)
+                                <div class="flex items-start justify-between">
+                                    {{-- comment user / content --}}
+                                    <div class="flex items-center gap-x-1">
+                                        @if ($comment->user)
+                                            @if (auth()->user()->profile_img)
+                                                <x-profile-img :user="$comment->user" isSmall="true" />
+                                            @else
+                                                <span
+                                                    class="h-5.5 w-5.5 flex cursor-pointer items-center justify-center rounded-full bg-gray-500 text-6xl font-bold text-gray-900">{{ strtoupper(substr(auth()->user()->name, 0, 1)) }}</span>
+                                            @endif
                                             <span
-                                                class="h-5.5 w-5.5 flex cursor-pointer items-center justify-center rounded-full bg-gray-500 text-6xl font-bold text-gray-900">{{ strtoupper(substr(auth()->user()->name, 0, 1)) }}</span>
+                                                class="ml-0.5 mr-0.5 text-[13px] font-semibold text-gray-900">{{ $comment->user->name }}</span>
+                                            <p class="text-xs">{{ $comment->comment }}</p>
+                                        @else
+                                            <span class="mr-2 font-semibold text-gray-500">Deleted User</span>
                                         @endif
-                                        <span
-                                            class="ml-0.5 mr-0.5 text-[13px] font-semibold text-gray-900">{{ $comment->user->name }}</span>
-                                        <p class="text-xs">{{ $comment->comment }}</p>
-                                    @else
-                                        <span class="mr-2 font-semibold text-gray-500">Deleted User</span>
-                                    @endif
-                                </div>
+                                    </div>
 
-                                <div class="flex items-center">
-                                    {{-- comment like/unlike --}}
-                                    @if ($comment->likes->where('user_id', auth()->id())->count() > 0)
-                                        <form action="{{ route('unlike.comment', $comment->id) }}" method="POST">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="flex gap-0.5 text-red-500 hover:text-red-600">
-                                                <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
-                                                    <path fill-rule="evenodd"
-                                                        d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"
-                                                        clip-rule="evenodd" />
-                                                </svg>
-                                                <span>{{ $comment->likes->count() }}</span>
-                                            </button>
-                                        </form>
-                                    @else
-                                        <form action="{{ route('likes.comment', $comment->id) }}" method="POST">
-                                            @csrf
-                                            <button type="submit" class="flex gap-0.5 text-gray-700 hover:text-red-900">
-                                                <svg class="h-4 w-4" fill="none" stroke="currentColor"
-                                                    viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                        d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                                                </svg>
-                                                <span class="text-xs">{{ $comment->likes->count() }}</span>
-                                            </button>
-                                        </form>
-                                    @endif
+                                    <div class="flex items-center">
+                                        {{-- comment like/unlike --}}
+                                        @if ($comment->likes->where('user_id', auth()->id())->count() > 0)
+                                            <form action="{{ route('unlike.comment', $comment->id) }}" method="POST">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="flex gap-0.5 text-red-500 hover:text-red-600">
+                                                    <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path fill-rule="evenodd"
+                                                            d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"
+                                                            clip-rule="evenodd" />
+                                                    </svg>
+                                                    <span>{{ $comment->likes->count() }}</span>
+                                                </button>
+                                            </form>
+                                        @else
+                                            <form action="{{ route('likes.comment', $comment->id) }}" method="POST">
+                                                @csrf
+                                                <button type="submit"
+                                                    class="flex gap-0.5 text-gray-700 hover:text-red-900">
+                                                    <svg class="h-4 w-4" fill="none" stroke="currentColor"
+                                                        viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-width="2"
+                                                            d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                                                    </svg>
 
-                                    {{-- comment delete --}}
-                                    @if (auth()->id() === $comment->user_id || auth()->id() === $post->user_id)
-                                        <form action="{{ route('comments.destroy', $comment->id) }}" method="POST"
-                                            class="ml-2">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="text-xs text-gray-400 hover:text-red-500"
-                                                onclick="return confirm('Delete this comment?')">
-                                                <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
-                                                    <path fill-rule="evenodd"
-                                                        d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                                                        clip-rule="evenodd" />
-                                                </svg>
-                                            </button>
-                                        </form>
-                                    @endif
+                                                    <span class="text-xs">{{ $comment->likes->count() }}</span>
+                                                </button>
+                                            </form>
+                                        @endif
+
+                                        {{-- comment delete --}}
+                                        @if (auth()->id() === $comment->user_id || auth()->id() === $post->user_id)
+                                            <form action="{{ route('comments.destroy', $comment->id) }}" method="POST"
+                                                class="ml-2">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="text-xs text-gray-400 hover:text-red-500"
+                                                    onclick="return confirm('Delete this comment?')">
+                                                    <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path fill-rule="evenodd"
+                                                            d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                                            clip-rule="evenodd" />
+                                                    </svg>
+                                                </button>
+                                            </form>
+                                        @endif
+                                    </div>
                                 </div>
+                            @endforeach
+                        @else
+                            <div
+                                class="flex h-full min-h-20 w-full flex-col items-center justify-center text-xs sm:text-sm">
+                                <p>There is no comments!</p>
+                                <span>don't be shy! create it 😒.</span>
                             </div>
-                        @endforeach
+                        @endif
                     </div>
 
                     <!-- Actions Section -->
                     <div class="border-t border-gray-200">
-                        <!-- Like/Comment Actions -->
-                        <div class="flex items-center space-x-4 p-4">
+                        <!-- Like / countLikes / Date -->
+                        <div class="flex flex-col items-start p-2 sm:p-4">
                             @if ($post->likes->where('user_id', auth()->id())->count() > 0)
                                 <form action="{{ route('unlike.post', $post->id) }}" method="POST">
                                     @csrf
@@ -196,20 +188,27 @@
                                     </button>
                                 </form>
                             @endif
+
+                            <!-- Like Count -->
+                            <div
+                                class="likes-modal-container cursor-pointer text-center text-sm font-normal sm:text-lg sm:font-semibold">
+                                <div class="likes-modal-btn text-start">
+                                    <span class="flex-start text-xs text-gray-900 sm:text-sm">{{ $post->likes->count() }}
+                                        likes</span>
+                                </div>
+                                <x-likes-card :user="$post" name="post" />
+                            </div>
+
+                            <div>
+                                <span
+                                    class="text-xs uppercase text-gray-500">{{ $post->created_at->diffForHumans() }}</span>
+                            </div>
                         </div>
 
-                        <!-- Like Count -->
-                        <div class="px-4 pb-2">
-                            <span class="font-semibold text-gray-900">{{ $post->likes->count() }} likes</span>
-                        </div>
 
-                        <!-- Date -->
-                        <div class="px-4 pb-4">
-                            <span class="text-xs uppercase text-gray-500">{{ $post->created_at->diffForHumans() }}</span>
-                        </div>
 
                         <!-- Add Comment -->
-                        <div class="border-t border-gray-200 p-4">
+                        <div class="border-t border-gray-200 p-2 sm:p-4">
                             <form action="{{ route('comments.store', $post->id) }}" method="POST" class="flex">
                                 @csrf
                                 <textarea name="comment" placeholder="Add a comment..." required
@@ -232,27 +231,32 @@
             if (el) el.remove();
         }
 
-        <
-        script >
-            document.addEventListener('DOMContentLoaded', function() {
-                const toggles = document.querySelectorAll('.post-options-toggle');
+        // likes modal 
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.likes-modal-container').forEach((container) => {
+                const btn = container.querySelector('.likes-modal-btn');
+                const overlay = container.querySelector('.likes-modal-overlay');
+                const content = container.querySelector('.likes-modal-content');
+                const closebtn = container.querySelector('.likes-modal-close-btn');
 
-                toggles.forEach(toggle => {
-                    const menu = toggle.nextElementSibling; // the .post-options-menu after the button
+                // show the card
+                btn.addEventListener('click', () => {
+                    overlay.classList.remove('hidden');
+                    overlay.classList.add('flex');
+                })
 
-                    toggle.addEventListener('click', function(e) {
-                        e.stopPropagation(); // prevent immediate closing by document click
-                        menu.classList.toggle('hidden');
-                    });
+                // hide the card on button click
+                closebtn.addEventListener('click', () => {
+                    overlay.classList.add('hidden');
+                    overlay.classList.remove('flex');
+                })
 
-                    // Close menu when clicking outside
-                    document.addEventListener('click', function(event) {
-                        if (!toggle.contains(event.target) && !menu.contains(event.target)) {
-                            menu.classList.add('hidden');
-                        }
-                    });
-                });
-            }); <
-        />
+                // hide the card on outside click
+                overlay.addEventListener('click', () => {
+                    overlay.classList.add('hidden');
+                    overlay.classList.remove('flex');
+                })
+            });
+        });
     </script>
 @endsection

@@ -1,5 +1,5 @@
 <!-- resources/views/partials/footer.blade.php -->
-<footer class="mt-12 border-t border-gray-200 bg-gray-50/50">
+<footer class="mb-12 mt-12 border-t border-gray-200 bg-gray-50/50 sm:mb-3">
     <div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         <!-- Main footer content -->
         <div class="grid grid-cols-1 gap-6 md:grid-cols-3 md:gap-8">
@@ -67,7 +67,7 @@
                     </a>
                     <a href="{{ route('about') }}" class="text-gray-400 transition-colors hover:text-gray-600"
                         aria-label="About">
-                        <x-icon icon="info" format="png" size="w-4 h-4" />
+                        <x-icon icon="indigo-info" format="png" size="w-4 h-4" />
                     </a>
                 </div>
                 <div class="flex justify-center space-x-2 md:justify-end">

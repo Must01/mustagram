@@ -33,6 +33,7 @@ Route::delete('/posts/{post}', [PostController::class, 'destroy'])->name('posts.
 Route::get('/profile/{user}', [ProfileController::class, 'index'])->name('profile.show');
 Route::get('/profile/{user}/edit', [ProfileController::class, 'edit'])->name('profile.edit');
 Route::patch('/profile/{user}', [ProfileController::class, 'update'])->name('profile.update');
+Route::delete('/profile/{user}', [ProfileController::class , 'destroy'])->name('profile.destroy');
 
 // Comment routes
 Route::post('/posts/{post}/comments', [CommentController::class, 'store'])->name('comments.store');

@@ -87,6 +87,19 @@
                     </div>
                 </form>
             </div>
+
+            <form class="delete-field w-full" method="POST" action="{{ route('profile.destroy', $user) }}">
+                @csrf
+                @method('DELETE')
+
+                <div class="flex items-center">
+                    <button type="submit"
+                        onclick="return confirm('Are you sure you want to delete your account? This action cannot be undone.');"
+                        class="not-[]: w-full cursor-pointer rounded-b-lg bg-red-500 px-4 py-2 font-bold text-white hover:bg-red-600">
+                        Delete My Account
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 @endsection

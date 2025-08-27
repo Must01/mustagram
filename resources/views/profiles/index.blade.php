@@ -1,5 +1,6 @@
 @extends('layouts.app')
 @section('content')
+
     <div class="mx-auto max-w-6xl sm:px-6 lg:px-8">
         <!-- Profile Header Section -->
         <div class="mb-12 flex flex-col items-center gap-8 md:flex-row md:items-start">
@@ -30,7 +31,7 @@
                     <div
                         class="modal-container cursor-pointer rounded-md p-1 text-center text-sm font-normal transition-colors duration-200 hover:bg-indigo-50 sm:px-2 sm:py-1 sm:text-lg sm:font-semibold">
                         <div class="modal-btn">
-                            <span class="text-gray-900">{{ $user->followers()->count() }}</span>
+                            <span class="text-gray-900">{{ $user->followersUsers()->count() }}</span>
                             <span class="ml-1 text-gray-600">followers</span>
                         </div>
                         <x-follow-card :user="$user" name="followers" />
@@ -38,7 +39,7 @@
                     <div
                         class="modal-container cursor-pointer rounded-md p-1 text-center text-sm font-normal transition-colors duration-200 hover:bg-indigo-50 sm:px-2 sm:py-1 sm:text-lg sm:font-semibold">
                         <div class="modal-btn">
-                            <span class="text-gray-900">{{ $user->following()->count() }}</span>
+                            <span class="text-gray-900">{{ $user->followingUsers()->count() }}</span>
                             <span class="ml-1 text-gray-600">following</span>
                         </div>
                         <x-follow-card :user="$user" name="following" />
@@ -61,30 +62,23 @@
         <!-- Posts Grid -->
         @if ($user->posts->count() > 0)
             <div class="border-t border-gray-200 pt-2 sm:pt-4">
-                <div class="grid grid-cols-3 gap-0.5 sm:grid-cols-2 sm:gap-4 md:gap-6 lg:grid-cols-3">
-                    @foreach ($user->posts as $post)
+                <div class="grid grid-cols-3 gap-0.5 sm:grid-cols-2 sm:gap-2 md:gap-6 lg:grid-cols-3">
+                    @foreach ($user->posts->sortByDesc('created_at') as $post)
+                        <!-- Desc order -->
                         <a href="{{ route('posts.show', $post->id) }}" class="block h-full w-full">
                             <div class="group relative aspect-square cursor-pointer">
-                                <img src=" {{ Storage::disk('cloudinary')->url($post->image_path[0]) }} "
+                                <img loading="lazy" src=" {{ Storage::disk('cloudinary')->url($post->image_path[0]) }} "
                                     class="h-full w-full rounded-lg object-cover shadow-sm transition-shadow duration-200 group-hover:shadow-md"
                                     alt="Post image">
                                 <div
-                                    class="absolute inset-0 flex items-center justify-center bg-black/20 bg-opacity-50 text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                                    class="absolute inset-0 flex items-center justify-center rounded-lg bg-black/20 bg-opacity-50 text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                                     <div class="flex space-x-6 text-lg font-semibold">
                                         <div class="flex items-center space-x-1">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 fill-current"
-                                                viewBox="0 0 20 20" fill="currentColor">
-                                                <path
-                                                    d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" />
-                                            </svg>
+                                            <x-icon icon="white-heart" format="png" size="w-4 h-4" />
                                             <span>{{ $post->likes->count() }}</span>
                                         </div>
                                         <div class="flex items-center space-x-1">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 fill-current"
-                                                viewBox="0 0 20 20" fill="currentColor">
-                                                <path
-                                                    d="M18 10c0 3.866-3.582 7-8 7a8.83 8.83 0 01-4.964-1.528L2 17l1.528-2.964A8.83 8.83 0 014 10c0-3.866 3.582-7 8-7s8 3.134 8 7z" />
-                                            </svg>
+                                            <x-icon icon="white-comment" format="png" size="w-4 h-4" />
                                             <span>{{ $post->comments->count() }}</span>
                                         </div>
                                     </div>

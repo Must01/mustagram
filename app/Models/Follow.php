@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use MongoDB\Laravel\Eloquent\Casts\ObjectId;
 use MongoDB\Laravel\Eloquent\Model;
 
 class Follow extends Model
@@ -15,13 +16,14 @@ class Follow extends Model
     ];
 
     // who did the following?
-    public function follower() {
+    public function follower()
+    {
         return $this->belongsTo(User::class, 'follower_id');
     }
 
     // who is being followed?
-    public function following() {
+    public function following()
+    {
         return $this->belongsTo(User::class, 'following_id');
     }
-
 }

@@ -37,8 +37,7 @@
 
                     <!-- Images -->
                     <div class="w-full p-0.5">
-                        <x-image-upload name="images" :user="$user" />
-
+                        <x-image-upload name="images" :post="$post" />
                     </div>
 
                     {{-- Errors --}}
@@ -64,7 +63,7 @@
                     <!-- Submit Buttons -->
                     <div class="flex space-x-3">
                         <button type="submit"
-                            class="flex-1 cursor-pointer rounded-md bg-blue-500 px-4 py-2 text-sm font-semibold text-white transition-colors duration-200 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                            class="flex-1 rounded-md bg-blue-500 px-4 py-2 text-sm font-semibold text-white transition-colors duration-200 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
                             Update Post
                         </button>
                         <a href="{{ route('posts.show', $post->id) }}"
@@ -87,7 +86,8 @@
             <form action="{{ route('posts.destroy', $post->id) }}" method="POST" class="inline">
                 @csrf
                 @method('DELETE')
-                <button type="submit" class="w-full bg-red-500 py-3 text-center text-sm text-white hover:bg-red-600"
+                <button type="submit"
+                    class="w-full cursor-pointer bg-red-500 py-3 text-center text-sm text-white hover:bg-red-600"
                     onclick="return confirm('Are you sure you want to delete this post? This action cannot be undone.')">
                     Delete Post
                 </button>

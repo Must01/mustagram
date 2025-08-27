@@ -1,33 +1,4 @@
 import "./bootstrap";
-// mobile menu toggle
-// user menu toggle (module-scoped, no inline onclick)
-const userBtn = document.getElementById("user-menu-button");
-const userMenu = document.getElementById("user-menu");
-if (userBtn && userMenu) {
-    // toggle
-    userBtn.addEventListener("click", (e) => {
-        e.stopPropagation();
-        const isOpen = userMenu.classList.toggle("hidden") === false; // true if open
-        userBtn.setAttribute("aria-expanded", isOpen ? "true" : "false");
-    });
-
-    // close when clicking outside
-    document.addEventListener("click", (e) => {
-        if (!userBtn.contains(e.target) && !userMenu.contains(e.target)) {
-            userMenu.classList.add("hidden");
-            userBtn.setAttribute("aria-expanded", "false");
-        }
-    });
-
-    // keyboard: close on Escape, navigate
-    document.addEventListener("keydown", (e) => {
-        if (e.key === "Escape") {
-            userMenu.classList.add("hidden");
-            userBtn.setAttribute("aria-expanded", "false");
-            userBtn.focus();
-        }
-    });
-}
 
 // image upload logic
 document.addEventListener("DOMContentLoaded", () => {

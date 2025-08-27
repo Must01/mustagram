@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Follow;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class ProfileController extends Controller
@@ -19,7 +21,7 @@ class ProfileController extends Controller
         if (auth()->id() !== $user->id) {
             abort(403, 'Unauthorized action.');
         }
-        
+
         return view('profiles.edit', compact('user'));
     }
 
@@ -42,13 +44,25 @@ class ProfileController extends Controller
             if ($user->profile_image) {
                 Storage::disk('cloudinary')->delete($user->profile_image);
             }
-            
+
             $imagePath = Storage::disk('cloudinary')->putFile('public', $request->file('image'));
             $data['profile_img'] = $imagePath;
         }
 
         $user->update($data);
 
-        return redirect()->route('profile.show' , $user->id)->with('success', 'Profile updated successfully.');
+        return redirect()->route('profile.show', $user->id)->with('success', 'Profile updated successfully.');
+    }
+
+    public function destroy(User $user)
+    {
+        // Check if the authenticated user is the same as the profile user
+        if (auth()->id() !== $user->id) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        Auth::user()->delete();
+
+        Auth::logout();
     }
 }

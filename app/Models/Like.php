@@ -15,15 +15,18 @@ class Like extends Model
         'comment_id'
     ];
 
-    public function post() {
+    public function post()
+    {
         return $this->belongsTo(Post::class);
     }
 
-    public function comment() {
+    public function comment()
+    {
         return $this->belongsTo(Comment::class);
     }
 
-    public function user() {
-        return $this->belongsTo(User::class);
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

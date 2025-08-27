@@ -8,10 +8,9 @@ use Illuminate\Http\Request;
 
 class followController extends Controller
 {
-    public function follow(User $user) {
-        // dd("so  " . auth()->user()->username." want to follow $user->username");
-
-        Follow::create([
+    public function follow(User $user)
+    {
+        Follow::updateOrCreate([
             'follower_id' => auth()->user()->id,
             'following_id' => $user->id,
         ]);
@@ -19,9 +18,12 @@ class followController extends Controller
         return redirect()->back();
     }
 
-    public function unfollow( User $user) {
-
-        Follow::where(['follower_id' => auth()->user()->id, 'following_id'=> $user->id])->delete();
+    public function unfollow(User $user)
+    {
+        Follow::where([
+            'follower_id' => auth()->user()->id,
+            'following_id' => $user->id
+        ])->delete();
 
         return redirect()->back();
     }

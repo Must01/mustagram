@@ -4,6 +4,7 @@ namespace App\Models;
 
 use MongoDB\Laravel\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use MongoDB\BSON\ObjectId; // Ensure this is imported for explicit casting
 
 class User extends Authenticatable
 {
@@ -24,7 +25,7 @@ class User extends Authenticatable
         'bio',
     ];
 
-    
+
     protected $hidden = [
         'password',
         'remember_token',
@@ -50,7 +51,7 @@ class User extends Authenticatable
 
     public function likes()
     {
-        return $this->hasMany(Like::class); 
+        return $this->hasMany(Like::class);
     }
 
     public function comments()
@@ -58,33 +59,32 @@ class User extends Authenticatable
         return $this->hasMany(Comment::class);
     }
 
-    public function follow() 
+    /**  Users I follow */
+    public function followingUsers()
     {
-        return $this->hasMany(Follow::class , 'follower_id')->with('user');
+        // 1. Get the IDs of the users this user is following from the 'follow' collection.
+        //    We get the Follow documents first, then pluck the 'following_id' from them.
+        $followingIds = Follow::where('follower_id', $this->id)->get()->pluck('following_id');
+
+        // 2. Use those IDs to find the actual User models.
+        return User::whereIn('_id', $followingIds)->get();
     }
 
-    // show me all the people that this user follow
-    public function following() {
-        return Follow::where('follower_id' , $this->id);
+    /** Users who follow me */
+    public function followersUsers()
+    {
+        // 1. Get the IDs of the users who are following this user from the 'follow' collection.
+        $followerIds = Follow::where('following_id', $this->id)->get()->pluck('follower_id');
+
+        // 2. Use those IDs to find the actual User models.
+        return User::whereIn('_id', $followerIds)->get();
     }
 
-    // show me all the people that followe this user
-    public function followers() {
-        return Follow::where('following_id', $this->id);
+    /** Check if the current user is following another user */
+    public function isFollowing(User $user): bool
+    {
+        return Follow::where('follower_id', $this->id)
+            ->where('following_id', $user->id)
+            ->exists(); // add ->exists() to return a boolean
     }
-
-    public function isFollowing($user) {
-        return Follow::where(['follower_id' => $this->id , 'following_id' => $user->id]);
-    }
-
-    // Users I follow
-    public function followingUsers() {
-        return $this->hasMany(Follow::class, 'follower_id');
-    }
-
-    // Users who follow me
-    public function followersUsers() {
-        return $this->hasMany(Follow::class, 'following_id');
-    }
-
 }
