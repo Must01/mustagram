@@ -62,9 +62,9 @@
                 </div>
 
                 <!-- Post Actions -->
-                <div class="p-4">
+                <div class="flex flex-col space-y-1 p-4 sm:space-y-2">
                     <!-- Like/Comment/Share -->
-                    <div class="mb-4 flex items-center space-x-4">
+                    <div class="mb-2 flex items-center space-x-4 sm:mb-3">
                         @if ($post->likes->where('user_id', auth()->id())->count() > 0)
                             <form action="{{ route('unlike.post', $post->id) }}" method="POST">
                                 @csrf
@@ -103,24 +103,21 @@
                         <x-likes-card :user="$post" name="post" />
                     </div>
 
+                    <!-- Caption -->
                     <a href="{{ route('posts.show', $post->id) }}">
-                        <!-- Caption -->
-                        <div class="mb-2">
-                            @if ($post->user)
-                                <span class="mr-1 font-semibold text-gray-900">{{ $post->user->username }}</span>
-                            @endif
-                            <span class="text-xs text-gray-900 sm:text-base">{{ $post->caption }}</span>
-                        </div>
+                        @if ($post->user)
+                            <span
+                                class="mr-1 text-sm font-medium text-gray-800 sm:text-base">{{ $post->user->username ? strtolower($post->user->username) : strtolower($post->user->name) }}</span>
+                        @endif
+                        <span class="text-xs text-gray-900 sm:text-sm">{{ $post->caption }}</span>
+
                     </a>
 
                     <!-- View Comments -->
                     @if ($post->comments->count() > 0)
-                        <div class="mb-2">
-                            <a href="{{ route('posts.show', $post->id) }}"
-                                class="text-sm text-gray-500 hover:text-gray-700">
-                                View all {{ $post->comments->count() }} comments
-                            </a>
-                        </div>
+                        <a href="{{ route('posts.show', $post->id) }}" class="text-sm text-gray-500 hover:text-gray-700">
+                            View all {{ $post->comments->count() }} comments
+                        </a>
                     @endif
 
                     <!-- Time -->

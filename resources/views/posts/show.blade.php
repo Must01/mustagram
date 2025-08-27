@@ -70,7 +70,8 @@
                             <div class="flex items-center space-x-1">
                                 <x-profile-img :user="$post->user" :isSmall="true" />
                                 <p class="text-xs sm:ml-1 sm:text-sm">
-                                    <span class="font-semibold text-gray-900">{{ $post->user->username }}</span>
+                                    <span
+                                        class="font-semibold text-gray-900">{{ $post->user->username ? strtolower($post->user->username) : strtolower($post->user->name) }}</span>
                                     {{ $post->caption }}
                                 </p>
                             </div>
@@ -80,21 +81,16 @@
                     </div>
 
                     <!-- Comments -->
-                    <div class="min-h-10 flex-1 space-y-1 overflow-y-auto overflow-x-hidden border-t border-gray-200 px-2">
+                    <div class="min-h-8 flex-1 space-y-1 overflow-y-auto overflow-x-hidden border-t border-gray-200 px-2">
                         @if ($post->comments->count() > 0)
                             @foreach ($post->comments as $comment)
                                 <div class="flex items-start justify-between">
                                     {{-- comment user / content --}}
                                     <div class="flex items-center gap-x-1">
                                         @if ($comment->user)
-                                            @if (auth()->user()->profile_img)
-                                                <x-profile-img :user="$comment->user" isSmall="true" />
-                                            @else
-                                                <span
-                                                    class="h-5.5 w-5.5 flex cursor-pointer items-center justify-center rounded-full bg-gray-500 text-6xl font-bold text-gray-900">{{ strtoupper(substr(auth()->user()->name, 0, 1)) }}</span>
-                                            @endif
+                                            <x-profile-img :user="$comment->user" :isSmall="true" />
                                             <span
-                                                class="ml-0.5 mr-0.5 text-[13px] font-semibold text-gray-900">{{ $comment->user->name }}</span>
+                                                class="ml-0.5 mr-0.5 text-xs font-semibold text-gray-800 sm:text-sm">{{ $comment->user->username ? strtolower($comment->user->username) : strtolower($comment->user->name) }}</span>
                                             <p class="text-xs">{{ $comment->comment }}</p>
                                         @else
                                             <span class="mr-2 font-semibold text-gray-500">Deleted User</span>
